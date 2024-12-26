@@ -12,19 +12,102 @@ class QuadraNLP:
                   ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid"], # advice-seeking questions
                   ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill"]] # economic questions
 
-  # list of possible cities that the user might reference [non-exhaustive]
-  specificPlaceList = ["Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "Paris", "London", "Tokyo", "Sydney", "Rome", "Barcelona",
-  "Berlin", "Dubai", "Toronto", "Seoul", "Bangkok", "Mexico City", "Riverside", "Cape Town", "California", "Florida", "Texas", "New York", "Nevada", "Hawaii", "Colorado", "Alaska", "Arizona",
-  "Utah", "Illinois", "Michigan", "Washington", "Georgia", "North Carolina", "Tennessee", "South Carolina", "Oregon", "New Jersey", "Virginia", "United States", "Canada", "United Kingdom",
-  "France", "Italy", "Spain", "Mexico", "Germany", "Australia", "Brazil", "Japan", "India", "South Korea", "Thailand", "South Africa", "China", "Russia",  "Egypt", "Argentina", "New Zealand", "Pakistan"]
+  # list of possible geographical cities/states/countries [mildly-exhaustive]
+  specificPlaceList = [
+      # United States - States
+      "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania", "Ohio", "Georgia", "North Carolina",
+      "Michigan", "New Jersey", "Virginia", "Washington", "Arizona", "Massachusetts", "Tennessee", "Indiana",
+      "Missouri",
+      "Maryland", "Wisconsin", "Colorado", "Minnesota", "South Carolina", "Alabama", "Louisiana", "Kentucky",
+      "Oregon", "Oklahoma", "Connecticut", "Utah", "Iowa", "Nevada", "Arkansas", "Mississippi", "Kansas", "New Mexico",
+      "Nebraska", "West Virginia", "Idaho", "Hawaii", "New Hampshire", "Maine", "Montana", "Rhode Island", "Delaware",
+      "South Dakota", "North Dakota", "Alaska", "Vermont", "Wyoming",
 
-  # list of possible pop-culture references [non-exhaustive]
-  specificPopCultureList = ["The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction", "Back to the Future", "The Lion King", # movies
-  "Apple", "Nike", "Tesla", "Coca-Cola", "McDonald’s", "Amazon", "Google", "Adidas", "Disney", "Microsoft", "Nvidia", # brands
-  "Friends", "Game of Thrones", "The Office", "Stranger Things", "Breaking Bad", "The Simpsons", "The Mandalorian", "The Crown", "The Walking Dead", "Westworld", # tv shows
-  "The Beatles", "Beyonce", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake", "Lady Gaga", "Eminem", # artists
-  "Super Mario Bros.", "Minecraft", "Fortnite", "The Legend of Zelda", "Call of Duty", "Grand Theft Auto", "Pokémon", "League of Legends", "FIFA", "The Witcher", # video games
-  "Rolls-Royce", "Ferrari", "Lamborghini", "Porsche", "Maserati", "Bentley", "Aston Martin", "Bugatti", "McLaren", "Mercedes-Benz", "Lexus", "BMW", "Audi"] # automotive brands
+      # United States - Cities
+      "Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "New York", "Houston", "Seattle",
+      "Boston", "Atlanta", "Phoenix", "Philadelphia", "San Diego", "Denver", "Dallas", "Orlando", "Tampa",
+      "Minneapolis",
+      "Detroit", "Portland", "St. Louis", "San Antonio", "Charlotte", "Pittsburgh", "Cleveland", "Kansas City",
+      "Indianapolis", "Nashville", "Salt Lake City", "Honolulu", "Albuquerque", "Buffalo", "Sacramento", "Birmingham",
+
+      # Global Cities (Major Capitals and Hubs)
+      "London", "Paris", "Berlin", "Madrid", "Rome", "Amsterdam", "Brussels", "Vienna", "Prague", "Moscow",
+      "Tokyo", "Seoul", "Beijing", "Shanghai", "Mumbai", "Delhi", "Bangalore", "Jakarta", "Manila", "Bangkok",
+      "Singapore", "Hong Kong", "Kuala Lumpur", "Dubai", "Riyadh", "Cairo", "Cape Town", "Johannesburg", "Lagos",
+      "Nairobi", "Addis Ababa", "Casablanca", "Buenos Aires", "São Paulo", "Rio de Janeiro", "Santiago",
+      "Lima", "Bogotá", "Caracas", "Mexico City", "Toronto", "Vancouver", "Sydney", "Melbourne", "Brisbane",
+      "Wellington", "Auckland", "Dublin", "Edinburgh", "Cardiff", "Belfast", "Helsinki", "Stockholm", "Oslo",
+      "Copenhagen", "Warsaw", "Budapest", "Belgrade", "Athens", "Istanbul", "Tel Aviv", "Jerusalem",
+
+      # Countries
+      "United States", "Canada", "United Kingdom", "France", "Italy", "Germany", "Spain", "Mexico", "Brazil",
+      "Argentina", "South Africa", "Japan", "India", "China", "Russia", "Australia", "New Zealand", "South Korea",
+      "Vietnam", "Thailand", "Philippines", "Malaysia", "Indonesia", "Singapore", "Saudi Arabia",
+      "United Arab Emirates",
+      "Egypt", "Morocco", "Kenya", "Nigeria", "Turkey", "Greece", "Portugal", "Sweden", "Norway", "Denmark",
+      "Netherlands", "Belgium", "Austria", "Switzerland", "Poland", "Czech Republic", "Hungary", "Romania",
+      "Bulgaria", "Serbia", "Croatia", "Slovenia", "Bosnia and Herzegovina", "Montenegro", "North Macedonia",
+      "Albania", "Ukraine", "Belarus", "Kazakhstan", "Uzbekistan", "Turkmenistan", "Kyrgyzstan", "Armenia", "Georgia",
+      "Azerbaijan", "Israel", "Jordan", "Iraq", "Iran", "Pakistan", "Afghanistan", "Bangladesh", "Nepal",
+      "Sri Lanka", "Bhutan", "Maldives", "Fiji", "Papua New Guinea", "Samoa", "Tonga", "Tuvalu",
+
+      # Regions
+      "North America", "South America", "Europe", "Asia", "Africa", "Oceania", "Caribbean", "Middle East", "Arctic",
+      "Antarctica", "Southeast Asia", "Central Asia", "Eastern Europe", "Western Europe", "Southern Africa",
+      "East Africa", "West Africa", "North Africa", "Central America", "Pacific Islands", "Scandinavia",
+      "Balkan Peninsula",
+      "Iberian Peninsula", "Himalayas", "Sahara Desert", "Amazon Rainforest", "Great Plains", "Rocky Mountains",
+      "Andes Mountains", "Alps", "Pyrenees", "Mediterranean", "Atlantic Ocean", "Pacific Ocean", "Indian Ocean",
+      "Arctic Ocean", "Baltic Sea", "Caribbean Sea", "Gulf of Mexico", "Bering Strait", "Panama Canal", "Suez Canal"
+  ]
+
+  # list of possible pop-culture references [mildly-exhaustive]
+  specificPopCultureList = [
+      # Movies
+      "The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction",
+      "Back to the Future", "The Lion King", "Avatar", "Inception", "Frozen", "The Dark Knight", "Forrest Gump", "The Shawshank Redemption",
+      "The Lord of the Rings", "Spider-Man", "Iron Man", "Black Panther", "Top Gun", "Wonder Woman", "Captain America",
+      "Finding Nemo", "Toy Story", "Shrek", "Cinderella", "Beauty and the Beast", "Aladdin", "Pirates of the Caribbean",
+      "The Hunger Games", "The Twilight Saga", "The Fast and the Furious", "Transformers", "The Bourne Identity", "Rocky",
+      "Creed", "A Quiet Place", "The Social Network", "The Joker", "Interstellar", "Goodfellas", "La La Land", "Coco",
+      "Encanto", "Zootopia", "Minions", "Moana", "Despicable Me", "The Little Mermaid", "Dune", "Oppenheimer", "Barbie", "Mission Impossible",
+
+      # Brands
+      "Apple", "Nike", "Tesla", "Coca-Cola", "McDonald’s", "Amazon", "Google", "Adidas", "Disney", "Microsoft", "Nvidia",
+      "Samsung", "Sony", "Intel", "Pepsi", "Starbucks", "Walmart", "Gucci", "Louis Vuitton", "Chanel", "Hermès", "Prada",
+      "Zara", "H&M", "Patagonia", "North Face", "Rolex", "Omega", "Lego", "Spotify", "Netflix", "YouTube", "Meta",
+      "TikTok", "Snapchat", "Bose", "PlayStation", "Xbox", "Nintendo", "Uber", "Lyft", "FedEx", "UPS", "Airbnb", "Balenciaga",
+      "Booking.com", "American Express", "Visa", "Mastercard", "Gucci", "Dior", "Cartier", "Burberry", "Versace", "Tiffany & Co.",
+
+      # TV Shows
+      "Friends", "Game of Thrones", "The Office", "Stranger Things", "Breaking Bad", "The Simpsons", "The Mandalorian",
+      "The Crown", "The Walking Dead", "Westworld", "How I Met Your Mother", "Seinfeld", "Parks and Recreation", "Brooklyn Nine-Nine",
+      "Big Bang Theory", "Schitt’s Creek", "Succession", "House of the Dragon", "Euphoria", "Wednesday", "Squid Game",
+      "The Witcher", "Better Call Saul", "Mad Men", "Lost", "Grey’s Anatomy", "Dexter", "Buffy the Vampire Slayer",
+      "The Sopranos", "True Detective", "The Boys", "Vikings", "The Umbrella Academy", "Arrested Development", "Fargo",
+      "American Horror Story", "Ozark", "Supernatural", "Glee", "Suits", "Yellowstone", "The Last of Us", "Peaky Blinders",
+
+      # Artists
+      "The Beatles", "Beyoncé", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake",
+      "Lady Gaga", "Eminem", "Ed Sheeran", "Justin Bieber", "Adele", "Rihanna", "Billie Eilish", "The Rolling Stones",
+      "Queen", "Pink Floyd", "Led Zeppelin", "Coldplay", "Bruno Mars", "Kendrick Lamar", "Harry Styles", "Doja Cat",
+      "Lil Nas X", "Shawn Mendes", "Bad Bunny", "Karol G", "Shakira", "Jennifer Lopez", "Mariah Carey", "Celine Dion",
+      "Taylor Swift", "Frank Sinatra", "Whitney Houston", "Prince", "ABBA", "Bee Gees", "Fleetwood Mac", "John Legend",
+      "Post Malone", "The Weeknd", "Selena Gomez", "BTS", "Blackpink", "Twice", "EXO", "Stray Kids", "Gorillaz", "Imagine Dragons",
+
+      # Video Games
+      "Super Mario Bros.", "Minecraft", "Fortnite", "The Legend of Zelda", "Call of Duty", "Grand Theft Auto", "Pokémon",
+      "League of Legends", "FIFA", "The Witcher", "Overwatch", "World of Warcraft", "Roblox", "Valorant", "Apex Legends",
+      "Counter-Strike", "Elden Ring", "Dark Souls", "Halo", "Assassin's Creed", "God of War", "Red Dead Redemption",
+      "The Sims", "Animal Crossing", "Among Us", "Tetris", "Pac-Man", "Donkey Kong", "Fall Guys", "Candy Crush", "Diablo",
+      "Horizon Zero Dawn", "Cyberpunk 2077", "Battlefield", "Street Fighter", "Tekken", "PUBG", "Clash of Clans", "Clash Royale",
+
+      # Automotive Brands
+      "Rolls-Royce", "Ferrari", "Lamborghini", "Porsche", "Maserati", "Bentley", "Aston Martin", "Bugatti", "McLaren",
+      "Mercedes-Benz", "Lexus", "BMW", "Audi", "Toyota", "Honda", "Ford", "Chevrolet", "Jeep", "Hyundai", "Kia", "Mazda",
+      "Subaru", "Volkswagen", "Jaguar", "Land Rover", "Tesla", "Rivian", "Lucid Motors", "Volvo", "Peugeot", "Renault",
+      "Fiat", "Alfa Romeo", "Citroën", "Dodge", "Chrysler", "Cadillac", "Acura", "Infiniti", "GMC", "Nissan", "Suzuki"
+  ]
 
   # words that are autocorrected
   correctedWord = []
