@@ -1,4 +1,4 @@
-from data_class import Data
+from data_class import QuadraNLP
 from loadingModule_2 import loadingAnimation
 import sys
 import string
@@ -32,6 +32,8 @@ def printPossibleMentions(saved_input, list):
 
 # method that checks if the given word is in the possibleList matrix to ensure that it can proceed with "what is"
 def validateItemAbsent(word, data_instance):
+    if not word:
+        return False
     for q in range(len(data_instance.possibleList)):
           for w in range(len(data_instance.possibleList[q])):
                 for e in word:
@@ -39,7 +41,8 @@ def validateItemAbsent(word, data_instance):
                           return False
     return True
 
-def checkFirstLetter(saved_input):
+# method that returns True if the saved_input's first word is not "if", "would", or "could", else it returns False
+def checkFirstWord(saved_input):
     return (saved_input.split()[0] != "if" and saved_input.split()[0] != "would" and saved_input.split()[0] != "could")
 
 # introductory instructions and terms/conditions
@@ -48,7 +51,7 @@ print("QUESTION ANALYZER: \n1.) Enter a question that you might ask a Google Ass
 print("This is a first step taken to complete a part of 'robotics data interpretation' and will be built upon modularly.\n")
 print("This model is still in BETA; some questions might not be recognizable by the system. More updates will be rolling out soon. [Version: 2.0]\n\n")
 user_input = input("Ask me anything: ")
-data_instance = Data()
+data_instance = QuadraNLP()
 rowCategory = None
 BLUE = '\033[34m'
 RESET = '\033[0m'
@@ -74,7 +77,7 @@ while user_input != "stop":
                           for a in processed_data.get("I"):
                                 if data_instance.possibleList[row][column] == a:
                                       rowCategory = str(row)
-              if rowCategory == None and not saved_input.__contains__("what if") and checkFirstLetter(saved_input) and not saved_input.__contains__("what is"):
+              if rowCategory == None and not saved_input.__contains__("what if") and not checkFirstWord(saved_input) and not saved_input.__contains__("what is"):
                     user_input = input(f"\n{BLUE}I wasn't able to understand your input. There might not exist any question type or identifier that I can use to process your query.{RESET}\nTry again or type 'stop': ")
               else:
                     # check for any basic sentiment in the given input
