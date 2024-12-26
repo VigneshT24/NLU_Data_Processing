@@ -69,122 +69,125 @@ start_time = time.time()
 while user_input != "stop":
     saved_input = user_input
     user_input = user_input.lower()
-    processed_data = data_instance.parsedData(data_instance.stemWord(user_input), saved_input)
-
-    # ensures there are no error, else, redirect the issue
-    if processed_data.get("I") != None:
-          loadingAnimation()
-          print("\n\n")
-          for row in range(len(data_instance.possibleList)):
-                for column in range(len(data_instance.possibleList[row])):
-                      for a in processed_data.get("I"):
-                            if data_instance.possibleList[row][column] == a:
-                                  rowCategory = str(row)
-          if rowCategory == None and not saved_input.__contains__("what if") and saved_input.split()[0] != "if" and not saved_input.__contains__("what is"):
-                user_input = input(f"\n{BLUE}I wasn't able to understand your input. There might not exist any question type or identifier that I can use to process your query.{RESET}\nTry again or type 'stop': ")
-          else:
-                # check for any basic sentiment in the given input
-                if next(iter(sentimentAnalysis(saved_input))):
-                    if len(sentimentAnalysis(saved_input).get(True)) > 1:
-                        print(f"{BLUE}The first thing I sensed is the combination of {str(sentimentAnalysis(saved_input).get(True)[0])} and {str(sentimentAnalysis(saved_input).get(True)[1])} mark, which makes me recognize a mix of confusion and excitement in the given input.{RESET}")
-                    elif sentimentAnalysis(saved_input).get(True)[0] == "exclamation":
-                        print(f"{BLUE}The first thing I sensed is the inclusion of an {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize either an excitement or frustration in the given input.{RESET}")
-                    elif sentimentAnalysis(saved_input).get(True)[0] == "question":
-                        print(f"{BLUE}The first thing I sensed is the inclusion of a {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that your given input wants me to clarify a confusion.{RESET}")
-                    elif sentimentAnalysis(saved_input).get(True)[0] == "uncertainty":
-                        print(f"{BLUE}The first thing I sensed is the inclusion of an {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that you are uncertain about a given topic.{RESET}")
-                print(f"{BLUE}I understand that your input starts with a {printAllQuestionType(processed_data)} and I am supposed to give a(n) {RESET}")
-                place_mentions = printPossibleMentions(saved_input, data_instance.specificPlaceList)
-                pop_culture_mentions = printPossibleMentions(saved_input, data_instance.specificPopCultureList)
-
-                # list of possible type of questions extracted from user input [non-exhaustive]
-                if saved_input.__contains__("what if") or saved_input.split()[0] == "if":
-                      if pop_culture_mentions != "":
-                         print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios of {str(pop_culture_mentions)}.{RESET}")
-                      elif place_mentions != "" and pop_culture_mentions == "":
-                         print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios of {str(place_mentions)}.{RESET}")
-                      else:
-                         print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios.{RESET}")
-                elif (saved_input.__contains__("what is") and (validateItemAbsent(data_instance.correctedWord, data_instance) or len(saved_input.split()) == 3)) or saved_input.__contains__("definition"):
-                      clean_text = saved_input.translate(str.maketrans('', '', string.punctuation))
-                      if clean_text.split().__getitem__(len(clean_text.split()) - 1).isupper():
-                         clean_text = clean_text.upper()
-                      if not saved_input.__contains__("definition"):
-                         print(f"{BLUE}definition and explanation for{clean_text.split("is", 1)[-1]}.{RESET}")
-                      elif saved_input.__contains__("definition"):
-                         print(f"{BLUE}definition and explanation for{clean_text.split("of", 1)[-1]}.{RESET}")
-                      else:
-                         print(f"{BLUE}definition and explanation for the given identifier.{RESET}")
-                elif rowCategory == "0":
-                      if place_mentions != "" and pop_culture_mentions != "":
-                         print(f"{BLUE}clear and succinct response providing general insights into situations, activities, individuals, or weather conditions and forecasts for locations like {str(place_mentions)} and Iconic References like {str(pop_culture_mentions)}.{RESET}")
-                      elif place_mentions != "":
-                          print(f"{BLUE}clear and succinct response providing general insights into situations, activities, individuals, or weather conditions and forecasts for locations like {str(place_mentions)}.{RESET}")
-                      elif pop_culture_mentions != "":
-                          print(f"{BLUE}clear and succinct response providing general insights into situations, activities, individuals, or weather conditions and forecasts for Iconic References like {str(pop_culture_mentions)}.{RESET}")
-                      else:
-                         print(f"{BLUE}clear and succinct response providing general insights into locations, situations, activities, individuals, or weather conditions and forecasts, grounded in established facts.{RESET}")
-                elif rowCategory == "1":
-                         print(f"{BLUE}insightful, evidence-based response addressing personal or health-related inquiries about diet, lifestyle, and well-being.{RESET}")
-                         if place_mentions != "" or pop_culture_mentions != "":
-                            print(f"{BLUE}You mentioned places and/or Iconic References like, yet I don't see any relevancy of these mentions to the personal or health-related inquires you asked.{RESET}")
-                elif rowCategory == "2":
-                      if place_mentions != "" and pop_culture_mentions != "":
-                         print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning, proven strategies, and relevancy to the following places: {str(place_mentions)} and Iconic References: {str(pop_culture_mentions)}.{RESET}")
-                      elif place_mentions != "":
-                          print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning, proven strategies, and relevancy to the following places: {str(place_mentions)}.{RESET}")
-                      elif pop_culture_mentions != "":
-                          print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning, proven strategies, and relevancy to the following Iconic References: {str(pop_culture_mentions)}.{RESET}")
-                      else:
-                         print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning and proven strategies.{RESET}")
-                elif rowCategory == "3":
-                      if place_mentions != "" and pop_culture_mentions != "":
-                         print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences and refined for the following places: {str(place_mentions)} and Iconic References: {str(pop_culture_mentions)}.{RESET}")
-                      elif place_mentions != "":
-                          print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences and refined for the following places: {str(place_mentions)}.{RESET}")
-                      elif pop_culture_mentions != "":
-                          print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences and refined for the following Iconic References: {str(pop_culture_mentions)}.{RESET}")
-                      else:
-                         print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences.{RESET}")
-                elif rowCategory == "4":
-                      print(f"{BLUE}concise or detailed mathematical response addressing a concept or calculation, based on established principles and logical reasoning.{RESET}")
-                      if place_mentions != "" or pop_culture_mentions != "":
-                          print(f"{BLUE}You mentioned places and/or Iconic References, although I am not sure the relevancy of this in the context of mathematical calculation, therefore, I am disregarding them.{RESET}")
-                elif rowCategory == "5":
-                      if place_mentions != "" and pop_culture_mentions != "":
-                         print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information for places like {str(place_mentions)} and Iconic References like {str(pop_culture_mentions)}.{RESET}")
-                      elif place_mentions != "":
-                         print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information for places like {str(place_mentions)}.{RESET}")
-                      elif pop_culture_mentions != "":
-                          print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information for Iconic References like {str(pop_culture_mentions)}.{RESET}")
-                      else:
-                         print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information, grounded in factual accuracy and context.{RESET}")
-                elif rowCategory == "6":
-                      if place_mentions != "" and pop_culture_mentions != "":
-                         print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results regarding the following places: {str(place_mentions)}.{RESET}")
-                         print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded them due its irrelevancy to advice giving.{RESET}")
-                      elif place_mentions != "":
-                         print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results in the following places: {str(place_mentions)}.{RESET}")
-                      elif pop_culture_mentions != "":
-                         print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
-                         print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded them due its irrelevancy to advice giving.{RESET}")
-                      else:
-                         print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
-                elif rowCategory == "7":
-                      if place_mentions != "" and pop_culture_mentions != "":
-                         print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights in relevancy to {str(place_mentions)} and Iconic References like {pop_culture_mentions}.{RESET}")
-                      elif place_mentions != "":
-                         print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights in relevancy to {str(place_mentions)}.{RESET}")
-                      elif pop_culture_mentions != "":
-                         print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights in relevancy to {str(pop_culture_mentions)}.{RESET}")
-                      else:
-                         print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights grounded in real-world relevance.{RESET}")
-                user_input = input("\nIs my understanding right? Type 'Y' for Yes or 'N' for No: ")
-                print("Glad I am doing it right. Data has been noted!") if (user_input.__contains__("Y") or user_input.__contains__("y")) else input("In what way should I have interpreted the response: ")
-                print("Thank you for your feedback!\n")
-                user_input = input("\nAsk me anything (or type 'stop' to end): ").lower()
+    if not user_input:
+        user_input = input("Sorry, empty input is not processable, please try again or type stop: ")
     else:
-          user_input = input(f"\nThis question is unrecognizable. Try again or type 'stop': ").lower()
+        processed_data = data_instance.parsedData(data_instance.stemWord(user_input), saved_input)
+
+        # ensures there are no error, else, redirect the issue
+        if processed_data.get("I") != None:
+              loadingAnimation()
+              print("\n\n")
+              for row in range(len(data_instance.possibleList)):
+                    for column in range(len(data_instance.possibleList[row])):
+                          for a in processed_data.get("I"):
+                                if data_instance.possibleList[row][column] == a:
+                                      rowCategory = str(row)
+              if rowCategory == None and not saved_input.__contains__("what if") and saved_input.split()[0] != "if" and saved_input.split()[0] != "would" and not saved_input.__contains__("what is"):
+                    user_input = input(f"\n{BLUE}I wasn't able to understand your input. There might not exist any question type or identifier that I can use to process your query.{RESET}\nTry again or type 'stop': ")
+              else:
+                    # check for any basic sentiment in the given input
+                    if next(iter(sentimentAnalysis(saved_input))):
+                        if len(sentimentAnalysis(saved_input).get(True)) > 1:
+                            print(f"{BLUE}The first thing I sensed is the combination of {str(sentimentAnalysis(saved_input).get(True)[0])} and {str(sentimentAnalysis(saved_input).get(True)[1])} mark, which makes me recognize a mix of confusion and excitement in the given input.{RESET}")
+                        elif sentimentAnalysis(saved_input).get(True)[0] == "exclamation":
+                            print(f"{BLUE}The first thing I sensed is the inclusion of an {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize either an excitement or frustration in the given input.{RESET}")
+                        elif sentimentAnalysis(saved_input).get(True)[0] == "question":
+                            print(f"{BLUE}The first thing I sensed is the inclusion of a {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that your given input wants me to clarify a confusion.{RESET}")
+                        elif sentimentAnalysis(saved_input).get(True)[0] == "uncertainty":
+                            print(f"{BLUE}The first thing I sensed is the inclusion of an {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that you are uncertain about a given topic.{RESET}")
+                    print(f"{BLUE}I understand that your input starts with a {printAllQuestionType(processed_data)} and I am supposed to give a(n) {RESET}")
+                    place_mentions = printPossibleMentions(saved_input, data_instance.specificPlaceList)
+                    pop_culture_mentions = printPossibleMentions(saved_input, data_instance.specificPopCultureList)
+
+                    # list of possible type of questions extracted from user input [non-exhaustive]
+                    if saved_input.__contains__("what if") or saved_input.split()[0] == "if" or saved_input.split()[0] == "would":
+                          if pop_culture_mentions != "":
+                             print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios of {str(pop_culture_mentions)}.{RESET}")
+                          elif place_mentions != "" and pop_culture_mentions == "":
+                             print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios of {str(place_mentions)}.{RESET}")
+                          else:
+                             print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios.{RESET}")
+                    elif (saved_input.__contains__("what is") and (validateItemAbsent(data_instance.correctedWord, data_instance) or len(saved_input.split()) == 3)) or saved_input.__contains__("definition"):
+                          clean_text = saved_input.translate(str.maketrans('', '', string.punctuation))
+                          if clean_text.split().__getitem__(len(clean_text.split()) - 1).isupper():
+                             clean_text = clean_text.upper()
+                          if not saved_input.__contains__("definition"):
+                             print(f"{BLUE}definition and explanation for{clean_text.split("is", 1)[-1]}.{RESET}")
+                          elif saved_input.__contains__("definition"):
+                             print(f"{BLUE}definition and explanation for{clean_text.split("of", 1)[-1]}.{RESET}")
+                          else:
+                             print(f"{BLUE}definition and explanation for the given identifier.{RESET}")
+                    elif rowCategory == "0":
+                          if place_mentions != "" and pop_culture_mentions != "":
+                             print(f"{BLUE}clear and succinct response providing general insights into situations, activities, individuals, or weather conditions and forecasts for locations like {str(place_mentions)} and Iconic References like {str(pop_culture_mentions)}.{RESET}")
+                          elif place_mentions != "":
+                              print(f"{BLUE}clear and succinct response providing general insights into situations, activities, individuals, or weather conditions and forecasts for locations like {str(place_mentions)}.{RESET}")
+                          elif pop_culture_mentions != "":
+                              print(f"{BLUE}clear and succinct response providing general insights into situations, activities, individuals, or weather conditions and forecasts for Iconic References like {str(pop_culture_mentions)}.{RESET}")
+                          else:
+                             print(f"{BLUE}clear and succinct response providing general insights into locations, situations, activities, individuals, or weather conditions and forecasts, grounded in established facts.{RESET}")
+                    elif rowCategory == "1":
+                             print(f"{BLUE}insightful, evidence-based response addressing personal or health-related inquiries about diet, lifestyle, and well-being.{RESET}")
+                             if place_mentions != "" or pop_culture_mentions != "":
+                                print(f"{BLUE}You mentioned places and/or Iconic References like, yet I don't see any relevancy of these mentions to the personal or health-related inquires you asked.{RESET}")
+                    elif rowCategory == "2":
+                          if place_mentions != "" and pop_culture_mentions != "":
+                             print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning, proven strategies, and relevancy to the following places: {str(place_mentions)} and Iconic References: {str(pop_culture_mentions)}.{RESET}")
+                          elif place_mentions != "":
+                              print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning, proven strategies, and relevancy to the following places: {str(place_mentions)}.{RESET}")
+                          elif pop_culture_mentions != "":
+                              print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning, proven strategies, and relevancy to the following Iconic References: {str(pop_culture_mentions)}.{RESET}")
+                          else:
+                             print(f"{BLUE}productivity-focused response designed to enhance health, work, or performance efficiency, based on logical reasoning and proven strategies.{RESET}")
+                    elif rowCategory == "3":
+                          if place_mentions != "" and pop_culture_mentions != "":
+                             print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences and refined for the following places: {str(place_mentions)} and Iconic References: {str(pop_culture_mentions)}.{RESET}")
+                          elif place_mentions != "":
+                              print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences and refined for the following places: {str(place_mentions)}.{RESET}")
+                          elif pop_culture_mentions != "":
+                              print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences and refined for the following Iconic References: {str(pop_culture_mentions)}.{RESET}")
+                          else:
+                             print(f"{BLUE}engaging, mood-enhancing response tailored to improving your leisure and overall well-being, based on entertainment preferences.{RESET}")
+                    elif rowCategory == "4":
+                          print(f"{BLUE}concise or detailed mathematical response addressing a concept or calculation, based on established principles and logical reasoning.{RESET}")
+                          if place_mentions != "" or pop_culture_mentions != "":
+                              print(f"{BLUE}You mentioned places and/or Iconic References, although I am not sure the relevancy of this in the context of mathematical calculation, therefore, I am disregarding them.{RESET}")
+                    elif rowCategory == "5":
+                          if place_mentions != "" and pop_culture_mentions != "":
+                             print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information for places like {str(place_mentions)} and Iconic References like {str(pop_culture_mentions)}.{RESET}")
+                          elif place_mentions != "":
+                             print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information for places like {str(place_mentions)}.{RESET}")
+                          elif pop_culture_mentions != "":
+                              print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information for Iconic References like {str(pop_culture_mentions)}.{RESET}")
+                          else:
+                             print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information, grounded in factual accuracy and context.{RESET}")
+                    elif rowCategory == "6":
+                          if place_mentions != "" and pop_culture_mentions != "":
+                             print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results regarding the following places: {str(place_mentions)}.{RESET}")
+                             print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded them due its irrelevancy to advice giving.{RESET}")
+                          elif place_mentions != "":
+                             print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results in the following places: {str(place_mentions)}.{RESET}")
+                          elif pop_culture_mentions != "":
+                             print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
+                             print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded them due its irrelevancy to advice giving.{RESET}")
+                          else:
+                             print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
+                    elif rowCategory == "7":
+                          if place_mentions != "" and pop_culture_mentions != "":
+                             print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights in relevancy to {str(place_mentions)} and Iconic References like {pop_culture_mentions}.{RESET}")
+                          elif place_mentions != "":
+                             print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights in relevancy to {str(place_mentions)}.{RESET}")
+                          elif pop_culture_mentions != "":
+                             print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights in relevancy to {str(pop_culture_mentions)}.{RESET}")
+                          else:
+                             print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights grounded in real-world relevance.{RESET}")
+                    user_input = input("\nIs my understanding right? Type 'Y' for Yes or 'N' for No: ")
+                    print("Glad I am doing it right. Data has been noted!") if (user_input.__contains__("Y") or user_input.__contains__("y")) else input("In what way should I have interpreted the response: ")
+                    print("Thank you for your feedback!\n")
+                    user_input = input("\nAsk me anything (or type 'stop' to end): ").lower()
+        else:
+              user_input = input(f"\nThis question is unrecognizable. Try again or type 'stop': ").lower()
 
 # post-program time display and feedback system
 end_time = time.time()
