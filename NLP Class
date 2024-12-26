@@ -131,11 +131,13 @@ class QuadraNLP:
                                                        r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
                                                        r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on)", userInput))
 
-      if self.autoCorrect(userInput, self.possibleList) is not None:
-         identifiers.extend(self.autoCorrect(userInput, self.possibleList))
-         identifiers = self.__remove_duplicate(identifiers)
+      if not identifiers:
+          if self.autoCorrect(userInput, self.possibleList) is not None:
+             identifiers.extend(self.autoCorrect(userInput, self.possibleList))
+             identifiers = self.__remove_duplicate(identifiers)
       result =  {"QT": question_type, "I": identifiers}
       self.correctedWord.extend(identifiers)
+      print(result)
       return result
 
   # takes the original sentence inputted by the user and then removes suffixes; local change not global
