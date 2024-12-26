@@ -40,7 +40,7 @@ class Data:
   # uses Python Regular Expressions to derive key data in a structural format, replicating a basic version of Natural Language Processing
   # "QT" = Question Type && "I" = Identifier
   def parsedData(self, userInput, original_input):
-      question_type = self.__remove_duplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would)", userInput))
+      question_type = self.__remove_duplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
       identifiers = self.__remove_duplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
                                                        r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
                                                        r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
@@ -53,6 +53,7 @@ class Data:
          identifiers = self.__remove_duplicate(identifiers)
       result =  {"QT": question_type, "I": identifiers}
       self.correctedWord.extend(identifiers)
+      print(result)
       return result
 
   # takes the original sentence inputted by the user and then removes suffixes; local change not global
@@ -85,3 +86,15 @@ class Data:
           return items[0]  # Return the single item as a string
       else:
           return ", ".join(items)
+
+  # analyzes combinations of punctuations like "!", "?", or "..." to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
+  def sentimentAnalysis(self, saved_input):
+      if saved_input.__contains__("!") and saved_input.__contains__("?"):
+          return {True: ["exclamation", "question"]}
+      elif saved_input.__contains__("!"):
+          return {True: ["exclamation"]}
+      elif saved_input.__contains__("?"):
+          return {True: ["question"]}
+      elif saved_input.__contains__("...") or saved_input.__contains__(".."):
+          return {True: ["uncertainty"]}
+      return {False: [""]}
