@@ -1,6 +1,6 @@
 import re
 
-class Data:
+class QuadraNLP:
 
   # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
   possibleList = [["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"], # direct-answer question
@@ -8,7 +8,7 @@ class Data:
                   ["calendar", "remind", "task", "schedul", "event", "deadlin", "project", "checklist", "alert", "notif", "organ", "priorit", "goal", "plann", "timelin", "focus", "track", "habit", "workflow"], # productivity questions
                   ["scor", "gam", "jok", "song", "challeng", "puzzl", "music", "lyric", "match", "adventur", "humor", "quiz", "fun", "comed", "story", "celebr", "sport", "trend"], # entertainment questions
                   ["plu", "minus", "multipl", "divid", "formula", "concept", "ratio", "algebra", "geometr", "calculus", "integrat", "deriv", "vector", "probabil", "statist", "measur", "equation", "matrix", "quantit"], # mathematical questions
-                  ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background"], # knowledge-building question
+                  ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background", "going on"], # knowledge-building question
                   ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid"], # advice-seeking questions
                   ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill"]] # economic questions
 
@@ -46,19 +46,18 @@ class Data:
                                                        r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
                                                        r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
                                                        r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
-                                                       r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid)", userInput))
+                                                       r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on)", userInput))
 
       if self.autoCorrect(userInput, self.possibleList) is not None:
          identifiers.extend(self.autoCorrect(userInput, self.possibleList))
          identifiers = self.__remove_duplicate(identifiers)
       result =  {"QT": question_type, "I": identifiers}
       self.correctedWord.extend(identifiers)
-      print(result)
       return result
 
   # takes the original sentence inputted by the user and then removes suffixes; local change not global
   def stemWord(self, userInput):
-     return re.sub(r'\b(?!(is\b))(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|ity|ics|in|inate|ance|ive|al)\b', '', userInput)
+     return re.sub(r'\b(?!(is|going on\b))(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|ity|ics|in|inate|ance|ive|al)\b', '', userInput)
 
   # finds any key data similar to the list above that might be misspelled to reinterpret input ~ similarity >= 70%
   def autoCorrect(self, userInput, c_list):
