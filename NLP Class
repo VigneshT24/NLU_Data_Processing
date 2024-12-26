@@ -157,8 +157,8 @@ class QuadraNLP:
                       elif (i + 1) < len(c_list[r][c]):
                           if list(n).__getitem__(i) == list(c_list[r][c]).__getitem__(i + 1):
                               count += 1
-                  if (count / max(len(n), len(c_list[r][c]))) * 100 >= 70:
-                      result.append(c_list[r][c])
+                      if (count / max(len(n), len(c_list[r][c]))) * 100 >= 70:
+                          result.append(c_list[r][c])
                   count = 0
       return result if result else None
 
