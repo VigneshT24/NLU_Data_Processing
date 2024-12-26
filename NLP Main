@@ -39,17 +39,8 @@ def validateItemAbsent(word, data_instance):
                           return False
     return True
 
-# analyzes combinations of punctuations like "!", "?", or "..." to interpret the tone of the saved_input - returns a hashmap like {bool : analysis string}
-def sentimentAnalysis(saved_input):
-    if saved_input.__contains__("!") and saved_input.__contains__("?"):
-        return {True: ["exclamation", "question"]}
-    elif saved_input.__contains__("!"):
-        return {True: ["exclamation"]}
-    elif saved_input.__contains__("?"):
-        return {True: ["question"]}
-    elif saved_input.__contains__("...") or saved_input.__contains__(".."):
-        return {True: ["uncertainty"]}
-    return {False: [""]}
+def checkFirstLetter(saved_input):
+    return (saved_input.split()[0] != "if" and saved_input.split()[0] != "would" and saved_input.split()[0] != "could")
 
 # introductory instructions and terms/conditions
 print("QUESTION ANALYZER: \n1.) Enter a question that you might ask a Google Assistance, Alexa, Siri, Cortana, etc..."
@@ -83,25 +74,25 @@ while user_input != "stop":
                           for a in processed_data.get("I"):
                                 if data_instance.possibleList[row][column] == a:
                                       rowCategory = str(row)
-              if rowCategory == None and not saved_input.__contains__("what if") and saved_input.split()[0] != "if" and saved_input.split()[0] != "would" and not saved_input.__contains__("what is"):
+              if rowCategory == None and not saved_input.__contains__("what if") and checkFirstLetter(saved_input) and not saved_input.__contains__("what is"):
                     user_input = input(f"\n{BLUE}I wasn't able to understand your input. There might not exist any question type or identifier that I can use to process your query.{RESET}\nTry again or type 'stop': ")
               else:
                     # check for any basic sentiment in the given input
-                    if next(iter(sentimentAnalysis(saved_input))):
-                        if len(sentimentAnalysis(saved_input).get(True)) > 1:
-                            print(f"{BLUE}The first thing I sensed is the combination of {str(sentimentAnalysis(saved_input).get(True)[0])} and {str(sentimentAnalysis(saved_input).get(True)[1])} mark, which makes me recognize a mix of confusion and excitement in the given input.{RESET}")
-                        elif sentimentAnalysis(saved_input).get(True)[0] == "exclamation":
-                            print(f"{BLUE}The first thing I sensed is the inclusion of an {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize either an excitement or frustration in the given input.{RESET}")
-                        elif sentimentAnalysis(saved_input).get(True)[0] == "question":
-                            print(f"{BLUE}The first thing I sensed is the inclusion of a {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that your given input wants me to clarify a confusion.{RESET}")
-                        elif sentimentAnalysis(saved_input).get(True)[0] == "uncertainty":
-                            print(f"{BLUE}The first thing I sensed is the inclusion of an {sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that you are uncertain about a given topic.{RESET}")
+                    if next(iter(data_instance.sentimentAnalysis(saved_input))):
+                        if len(data_instance.sentimentAnalysis(saved_input).get(True)) > 1:
+                            print(f"{BLUE}The first thing I sensed is the combination of {str(data_instance.sentimentAnalysis(saved_input).get(True)[0])} and {str(data_instance.sentimentAnalysis(saved_input).get(True)[1])} mark, which makes me recognize a mix of confusion and excitement in the given input.{RESET}")
+                        elif data_instance.sentimentAnalysis(saved_input).get(True)[0] == "exclamation":
+                            print(f"{BLUE}The first thing I sensed is the inclusion of an {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize either an excitement or frustration in the given input.{RESET}")
+                        elif data_instance.sentimentAnalysis(saved_input).get(True)[0] == "question":
+                            print(f"{BLUE}The first thing I sensed is the inclusion of a {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that your given input wants me to clarify a confusion.{RESET}")
+                        elif data_instance.sentimentAnalysis(saved_input).get(True)[0] == "uncertainty":
+                            print(f"{BLUE}The first thing I sensed is the inclusion of an {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that you are uncertain about a given topic.{RESET}")
                     print(f"{BLUE}I understand that your input starts with a {printAllQuestionType(processed_data)} and I am supposed to give a(n) {RESET}")
                     place_mentions = printPossibleMentions(saved_input, data_instance.specificPlaceList)
                     pop_culture_mentions = printPossibleMentions(saved_input, data_instance.specificPopCultureList)
 
                     # list of possible type of questions extracted from user input [non-exhaustive]
-                    if saved_input.__contains__("what if") or saved_input.split()[0] == "if" or saved_input.split()[0] == "would":
+                    if saved_input.__contains__("what if") or saved_input.split()[0] == "if" or saved_input.split()[0] == "would" or saved_input.split()[0] == "could":
                           if pop_culture_mentions != "":
                              print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios of {str(pop_culture_mentions)}.{RESET}")
                           elif place_mentions != "" and pop_culture_mentions == "":
