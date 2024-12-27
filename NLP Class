@@ -1,7 +1,13 @@
-import re
+# Engine Name: NLP Quadra
+# Created By: Vignesh Thondikulam
+# This can be used in any program to naturally analyze human language
+# Currently, this is the most complete package of the NLP Quadra Engine
 
+import re
 class QuadraNLP:
 
+  # to utilize these datasets: make QuadraNLP object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
+  # purpose of these lists are for the computer to recognize words or patterns from user_input to better decipher queries
   # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
   possibleList = [["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"], # direct-answer question
                   ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"], # health-related questions
@@ -14,19 +20,18 @@ class QuadraNLP:
 
   # list of possible geographical cities/states/countries [mildly-exhaustive]
   specificPlaceList = [
+
       # United States - States
       "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania", "Ohio", "Georgia", "North Carolina",
-      "Michigan", "New Jersey", "Virginia", "Washington", "Arizona", "Massachusetts", "Tennessee", "Indiana",
-      "Missouri",
+      "Michigan", "New Jersey", "Virginia", "Washington", "Arizona", "Massachusetts", "Tennessee", "Indiana", "Missouri",
       "Maryland", "Wisconsin", "Colorado", "Minnesota", "South Carolina", "Alabama", "Louisiana", "Kentucky",
       "Oregon", "Oklahoma", "Connecticut", "Utah", "Iowa", "Nevada", "Arkansas", "Mississippi", "Kansas", "New Mexico",
       "Nebraska", "West Virginia", "Idaho", "Hawaii", "New Hampshire", "Maine", "Montana", "Rhode Island", "Delaware",
       "South Dakota", "North Dakota", "Alaska", "Vermont", "Wyoming",
 
       # United States - Cities
-      "Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "New York", "Houston", "Seattle",
-      "Boston", "Atlanta", "Phoenix", "Philadelphia", "San Diego", "Denver", "Dallas", "Orlando", "Tampa",
-      "Minneapolis",
+      "Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "New York City", "Houston", "Seattle",
+      "Boston", "Atlanta", "Phoenix", "Philadelphia", "San Diego", "Denver", "Dallas", "Orlando", "Tampa", "Minneapolis",
       "Detroit", "Portland", "St. Louis", "San Antonio", "Charlotte", "Pittsburgh", "Cleveland", "Kansas City",
       "Indianapolis", "Nashville", "Salt Lake City", "Honolulu", "Albuquerque", "Buffalo", "Sacramento", "Birmingham",
 
@@ -42,8 +47,7 @@ class QuadraNLP:
       # Countries
       "United States", "Canada", "United Kingdom", "France", "Italy", "Germany", "Spain", "Mexico", "Brazil",
       "Argentina", "South Africa", "Japan", "India", "China", "Russia", "Australia", "New Zealand", "South Korea",
-      "Vietnam", "Thailand", "Philippines", "Malaysia", "Indonesia", "Singapore", "Saudi Arabia",
-      "United Arab Emirates",
+      "Vietnam", "Thailand", "Philippines", "Malaysia", "Indonesia", "Singapore", "Saudi Arabia", "United Arab Emirates",
       "Egypt", "Morocco", "Kenya", "Nigeria", "Turkey", "Greece", "Portugal", "Sweden", "Norway", "Denmark",
       "Netherlands", "Belgium", "Austria", "Switzerland", "Poland", "Czech Republic", "Hungary", "Romania",
       "Bulgaria", "Serbia", "Croatia", "Slovenia", "Bosnia and Herzegovina", "Montenegro", "North Macedonia",
@@ -54,8 +58,7 @@ class QuadraNLP:
       # Regions
       "North America", "South America", "Europe", "Asia", "Africa", "Oceania", "Caribbean", "Middle East", "Arctic",
       "Antarctica", "Southeast Asia", "Central Asia", "Eastern Europe", "Western Europe", "Southern Africa",
-      "East Africa", "West Africa", "North Africa", "Central America", "Pacific Islands", "Scandinavia",
-      "Balkan Peninsula",
+      "East Africa", "West Africa", "North Africa", "Central America", "Pacific Islands", "Scandinavia", "Balkan Peninsula",
       "Iberian Peninsula", "Himalayas", "Sahara Desert", "Amazon Rainforest", "Great Plains", "Rocky Mountains",
       "Andes Mountains", "Alps", "Pyrenees", "Mediterranean", "Atlantic Ocean", "Pacific Ocean", "Indian Ocean",
       "Arctic Ocean", "Baltic Sea", "Caribbean Sea", "Gulf of Mexico", "Bering Strait", "Panama Canal", "Suez Canal"
@@ -63,6 +66,7 @@ class QuadraNLP:
 
   # list of possible pop-culture references [mildly-exhaustive]
   specificPopCultureList = [
+
       # Movies
       "The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction",
       "Back to the Future", "The Lion King", "Avatar", "Inception", "Frozen", "The Dark Knight", "Forrest Gump", "The Shawshank Redemption",
@@ -110,9 +114,11 @@ class QuadraNLP:
   ]
 
   # words that are autocorrected
+  # to utilize correctedWord: once a word is implicitly autocorrected, you can call this variable to get access to the autocorrected word(s) for any purpose (e.g. access and print the autocorrected word(s) to make it more explicit)
   correctedWord = []
 
-  # method that removes accidental duplicates found by regular expression
+  # private method that removes accidental duplicates found by regular expression
+  # already implemented, no need to worry
   def __remove_duplicate(self, list):
       accList = []
       for i in list:
@@ -120,32 +126,14 @@ class QuadraNLP:
               accList.append(i)
       return accList
 
-  # uses Python Regular Expressions to derive key data in a structural format, replicating a basic version of Natural Language Processing
-  # "QT" = Question Type && "I" = Identifier
-  def parsedData(self, userInput, original_input):
-      question_type = self.__remove_duplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
-      identifiers = self.__remove_duplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
-                                                       r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
-                                                       r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
-                                                       r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
-                                                       r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
-                                                       r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on)", userInput))
-
-      if not identifiers:
-          if self.autoCorrect(userInput, self.possibleList) is not None:
-             identifiers.extend(self.autoCorrect(userInput, self.possibleList))
-             identifiers = self.__remove_duplicate(identifiers)
-      result =  {"QT": question_type, "I": identifiers}
-      self.correctedWord.extend(identifiers)
-      print(result)
-      return result
-
-  # takes the original sentence inputted by the user and then removes suffixes; local change not global
-  def stemWord(self, userInput):
+  # private method that takes the original sentence inputted by the user and then removes suffixes; local change not global
+  # already implemented, no need to worry
+  def __stemWord(self, userInput):
      return re.sub(r'\b(?!(is|going on\b))(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|ity|ics|in|inate|ance|ive|al)\b', '', userInput)
 
-  # finds any key data similar to the list above that might be misspelled to reinterpret input ~ similarity >= 70%
-  def autoCorrect(self, userInput, c_list):
+  # private method that finds any key data similar to the list above that might be misspelled to reinterpret input ~ similarity >= 70%
+  # already implemented, no need to worry
+  def __autoCorrect(self, userInput, c_list):
       inputList = userInput.split()
       count = 0
       result = []
@@ -164,14 +152,32 @@ class QuadraNLP:
                   count = 0
       return result if result else None
 
-  # prints the content by returning them
-  def printContent(self, items):
-      if len(items) == 1:
-          return items[0]  # Return the single item as a string
-      else:
-          return ", ".join(items)
+  # uses Python Regular Expressions to derive key data in a structural format, replicating a basic version of Natural Language Processing
+  # "QT" = Question Type && "I" = Identifier
+  # to utilize parsedData: make sure QuadraNLP object instance is made, then, call this function and pass in user_input that is stemmed-out [use stemWord() function]
+  # for this to return a dictionary that contains the question-type (e.g. what, where, when) and contextual identifier(s) (e.g. weather, advice, calculus) of the user_input
+  def parsedData(self, userInput):
+      userInput = self.__stemWord(userInput)
+      question_type = self.__remove_duplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
+      identifiers = self.__remove_duplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
+                                                       r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
+                                                       r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
+                                                       r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
+                                                       r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
+                                                       r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on)", userInput))
+
+      # assigns "result" dictionary its appropriate question_type and identifier
+      if not identifiers:
+          if self.__autoCorrect(userInput, self.possibleList) is not None:
+             identifiers.extend(self.__autoCorrect(userInput, self.possibleList))
+             identifiers = self.__remove_duplicate(identifiers)
+      result =  {"QT": question_type, "I": identifiers}
+      self.correctedWord.extend(identifiers)
+      return result
 
   # analyzes combinations of punctuations like "!", "?", or "..." to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
+  # to utilize sentimentAnalysis: make sure QuadraNLP object instance is made, then, call this function, pass in user_input for it to return a dictionary that can be used to denote
+  # the type of tone the user_input has (confusion, excitement, frustration, uncertainty)
   def sentimentAnalysis(self, saved_input):
       if saved_input.__contains__("!") and saved_input.__contains__("?"):
           return {True: ["exclamation", "question"]}
