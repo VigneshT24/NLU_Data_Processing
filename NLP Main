@@ -49,10 +49,12 @@ def checkFirstWord(saved_input):
     return (saved_input.split()[0].lower() != "if" and saved_input.split()[0].lower() != "would" and saved_input.split()[0].lower() != "could")
 
 # introductory instructions and terms/conditions
-print("QUESTION ANALYZER: \n1.) Enter a question that you might ask a Google Assistance, Alexa, Siri, Cortana, etc..."
-    "\n2.) The system will process your response.\n3.) It will give you it's understanding of the question by categorizing it using basic Natural Language Processing (NLP) algorithm.\n")
-print("This is a first step taken to complete a part of 'robotics data interpretation' and will be built upon modularly.\n")
-print("This model is still in BETA; some questions might not be recognizable by the system. More updates will be rolling out soon. [Version: 3.2]\n\n")
+print("QUADRA MODEL SIMULATOR: \n1.) Enter a question that you might ask a robotic/AI system."
+    "\n2.) The system will process your response.\n3.) It will give you it's understanding of the question by categorizing it using entry-level Natural Language Processing (NLP) algorithm.\n")
+print("Why is this crucial you might ask -> this is the first and most important step taken for many familiar systems like Alexa, ChatGPT, etc to process human language to then take action upon it.\n"
+      "This Quadra Engine uses a form of NLP to interpret the query that the user inputs to then explain back to the user what the system understood and deciphered.")
+print("The NLP model has recently exited BETA development. While it performs well in tests, it may occasionally misinterpret queries or miss some inputs. "
+      "Ongoing improvements are underway based on user feedback. [Version: 4.0]\n\n")
 user_input = input("Ask me anything: ")
 data_instance = QuadraNLP()
 rowCategory = None
@@ -97,7 +99,7 @@ while user_input != "stop":
                     place_mentions = printPossibleMentions(saved_input, data_instance.specificPlaceList)
                     pop_culture_mentions = printPossibleMentions(saved_input, data_instance.specificPopCultureList)
 
-                    # list of possible type of questions extracted from user input [non-exhaustive]
+                    # list of possible type of questions extracted from user input [mildly-exhaustive]
                     if saved_input.__contains__("what if") or saved_input.split()[0] == "if" or saved_input.split()[0] == "would" or saved_input.split()[0] == "could":
                           if pop_culture_mentions != "":
                              print(f"{BLUE}thoughtful, speculative answer based on logical reasoning, established facts, and potential scenarios of {str(pop_culture_mentions)}.{RESET}")
