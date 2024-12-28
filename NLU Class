@@ -1,12 +1,12 @@
-# Engine Name: NLP Quadra
+# Engine Name: NLU Quadra
 # Created By: Vignesh Thondikulam
 # This can be used in any program to naturally analyze human language
-# As of 12/27/2024, this is the most complete package of the NLP Quadra Engine
+# As of 12/27/2024, this is the most complete package of the NLU Quadra Engine
 
 import re
-class QuadraNLP:
+class QuadraNLU:
 
-  # to utilize these datasets: make QuadraNLP object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
+  # to utilize these datasets: make QuadraNLU object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
   # purpose of these lists are for the computer to recognize words or patterns from user_input to better decipher queries
   # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
   possibleList = [["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"], # direct-answer question
@@ -154,7 +154,7 @@ class QuadraNLP:
 
   # uses Python Regular Expressions to derive key data in a structural format, replicating a basic version of Natural Language Processing
   # "QT" = Question Type && "I" = Identifier
-  # to utilize parsedData: make sure QuadraNLP object instance is made, then, call this function and pass in user_input
+  # to utilize parsedData: make sure QuadraNLU object instance is made, then, call this function and pass in user_input
   # for this to return a dictionary that contains the question-type (e.g. what, where, when) and contextual identifier(s) (e.g. weather, advice, calculus) of the user_input
   def parsedData(self, userInput):
       userInput = self.__stemWord(userInput)
@@ -176,7 +176,7 @@ class QuadraNLP:
       return result
 
   # analyzes combinations of punctuations like "!", "?", "...", and CAPS-LOCK to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
-  # to utilize sentimentAnalysis: make sure QuadraNLP object instance is made, then, call this function, pass in user_input for it to return a dictionary that can be used to denote
+  # to utilize sentimentAnalysis: make sure QuadraNLU object instance is made, then, call this function, pass in user_input for it to return a dictionary that can be used to denote
   # the type of tone the user_input has (confusion, excitement, frustration, uncertainty)
   def sentimentAnalysis(self, saved_input):
       result = {False: []}
