@@ -1,4 +1,3 @@
-
 from data_class import QuadraNLP
 from loadingModule_2 import loadingAnimation
 import sys
@@ -71,7 +70,7 @@ while user_input != "stop":
     if not user_input:
         user_input = input("Sorry, empty input is not processable, please try again or type 'stop': ")
     else:
-        processed_data = data_instance.parsedData(data_instance.stemWord(user_input), saved_input)
+        processed_data = data_instance.parsedData(user_input)
 
         # ensures there are no error, else, redirect the issue
         if processed_data.get("I") != None:
@@ -86,15 +85,19 @@ while user_input != "stop":
                     user_input = input(f"\n{BLUE}I wasn't able to understand your input. There might not exist any question type or identifier that I can use to process your query.{RESET}\nTry again or type 'stop': ")
               else:
                     # check for any basic sentiment in the given input
+                    additive = ""
                     if next(iter(data_instance.sentimentAnalysis(saved_input))):
+                        if "caps-lock" in data_instance.sentimentAnalysis(saved_input).get(True):
+                            print(f"{BLUE}The first thing I sensed is that your input is in ALL CAPS, which is a strong indicator of urgency, frustration, or excitement of some form.{RESET}")
+                            additive = "also "
                         if len(data_instance.sentimentAnalysis(saved_input).get(True)) > 1:
-                            print(f"{BLUE}The first thing I sensed is the combination of {str(data_instance.sentimentAnalysis(saved_input).get(True)[0])} and {str(data_instance.sentimentAnalysis(saved_input).get(True)[1])} mark, which makes me recognize a mix of confusion and excitement in the given input.{RESET}")
+                            print(f"{BLUE}I {additive}sensed the combination of {str(data_instance.sentimentAnalysis(saved_input).get(True)[0])} and {str(data_instance.sentimentAnalysis(saved_input).get(True)[1])} mark, which makes me recognize a mix of confusion and excitement in the given input.{RESET}")
                         elif data_instance.sentimentAnalysis(saved_input).get(True)[0] == "exclamation":
-                            print(f"{BLUE}The first thing I sensed is the inclusion of an {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize either an excitement or frustration in the given input.{RESET}")
+                            print(f"{BLUE}I {additive}sensed the inclusion of an {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which {additive}makes me recognize either an excitement or frustration in the given input.{RESET}")
                         elif data_instance.sentimentAnalysis(saved_input).get(True)[0] == "question":
-                            print(f"{BLUE}The first thing I sensed is the inclusion of a {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that your given input wants me to clarify a confusion.{RESET}")
+                            print(f"{BLUE}I {additive}sensed the inclusion of a {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that your given input wants me to clarify a confusion.{RESET}")
                         elif data_instance.sentimentAnalysis(saved_input).get(True)[0] == "uncertainty":
-                            print(f"{BLUE}The first thing I sensed is the inclusion of an {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that you are uncertain about a given topic.{RESET}")
+                            print(f"{BLUE}I {additive}sensed the inclusion of an {data_instance.sentimentAnalysis(saved_input).get(True)[0]} mark, which makes me recognize that you are uncertain about a given topic.{RESET}")
                     print(f"{BLUE}I understand that your input starts with a {printAllQuestionType(processed_data)} and I am supposed to give a(n) {RESET}")
                     place_mentions = printPossibleMentions(saved_input, data_instance.specificPlaceList)
                     pop_culture_mentions = printPossibleMentions(saved_input, data_instance.specificPopCultureList)
