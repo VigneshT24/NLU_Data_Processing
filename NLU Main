@@ -1,4 +1,4 @@
-from data_class import QuadraNLP
+from data_class import QuadraNLU
 from loadingModule_2 import loadingAnimation
 import sys
 import string
@@ -49,13 +49,13 @@ def checkFirstWord(saved_input):
 
 # introductory instructions and terms/conditions
 print("QUADRA MODEL SIMULATOR: \n1.) Enter a question that you might ask a robotic/AI system."
-    "\n2.) The system will process your response.\n3.) It will give you it's understanding of the question by categorizing it using entry-level Natural Language Processing (NLP) algorithm.\n")
+    "\n2.) The system will process your response.\n3.) It will give you it's understanding of the question by categorizing it using entry-level Natural Language Processing (NLU) algorithm.\n")
 print("Why is this crucial you might ask -> this is the first and most important step taken for many familiar systems like Alexa, ChatGPT, etc to process human language to then take action upon it.\n"
-      "This Quadra Engine uses a form of NLP to interpret the query that the user inputs to then explain back to the user what the system understood and deciphered.")
-print("The NLP model has recently exited BETA development. While it performs well in tests, it may occasionally misinterpret queries or miss some inputs. "
+      "This Quadra Engine uses a form of NLU to interpret the query that the user inputs to then explain back to the user what the system understood and deciphered.")
+print("The NLU model has recently exited BETA development. While it performs well in tests, it may occasionally misinterpret queries or miss some inputs. "
       "Ongoing improvements are underway based on user feedback. [Version: 4.0]\n\n")
 user_input = input("Ask me anything: ")
-data_instance = QuadraNLP()
+data_instance = QuadraNLU()
 rowCategory = None
 BLUE = '\033[34m'
 RESET = '\033[0m'
