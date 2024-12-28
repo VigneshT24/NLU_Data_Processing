@@ -175,16 +175,22 @@ class QuadraNLP:
       self.correctedWord.extend(identifiers)
       return result
 
-  # analyzes combinations of punctuations like "!", "?", or "..." to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
+  # analyzes combinations of punctuations like "!", "?", "...", and CAPS-LOCK to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
   # to utilize sentimentAnalysis: make sure QuadraNLP object instance is made, then, call this function, pass in user_input for it to return a dictionary that can be used to denote
   # the type of tone the user_input has (confusion, excitement, frustration, uncertainty)
   def sentimentAnalysis(self, saved_input):
+      result = {False: []}
       if saved_input.__contains__("!") and saved_input.__contains__("?"):
-          return {True: ["exclamation", "question"]}
+          result = {True: ["exclamation", "question"]}
       elif saved_input.__contains__("!"):
-          return {True: ["exclamation"]}
+          result = {True: ["exclamation"]}
       elif saved_input.__contains__("?"):
-          return {True: ["question"]}
+          result = {True: ["question"]}
       elif saved_input.__contains__("...") or saved_input.__contains__(".."):
-          return {True: ["uncertainty"]}
-      return {False: [""]}
+          result = {True: ["uncertainty"]}
+      if saved_input.isupper():
+          if True in result:
+              result[True].append("caps-lock")
+          else:
+              result = {True: ["caps-lock"]}
+      return result
