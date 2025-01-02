@@ -3,6 +3,7 @@ from loadingModule_2 import loadingAnimation
 import sys
 import string
 import time
+import re
 
 # method that returns the question-type like 'what', 'when', where' etc...
 def printAllQuestionType(processed_data):
@@ -21,8 +22,7 @@ def printAllQuestionType(processed_data):
 
 # method that returns any possible places that the user mentioned in their original statement ~ improves specific contextualization
 def printPossibleMentions(saved_input, list):
-  matches = [place for place in list if place.lower() in saved_input.lower()]
-
+  matches = [place for place in list if re.search(rf'\b{re.escape(place.lower())}\b', saved_input.lower())]
   if len(matches) == 1:
       return matches[0]
   elif matches:
@@ -166,13 +166,11 @@ while user_input != "stop":
                             print(f"{BLUE}informative response aimed at enhancing your understanding of key details related to current or past events and information, grounded in factual accuracy and context.{RESET}")
                    elif rowCategory == "6":
                          if place_mentions != "" and pop_culture_mentions != "":
-                            print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results regarding the following places: {str(place_mentions)}.{RESET}")
-                            print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded it due its irrelevancy to advice giving.{RESET}")
+                            print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results regarding the following places: {str(place_mentions)} and Iconic References like: {str(pop_culture_mentions)}.{RESET}")
                          elif place_mentions != "":
                             print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results in the following places: {str(place_mentions)}.{RESET}")
                          elif pop_culture_mentions != "":
-                            print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
-                            print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded it due its irrelevancy to advice giving.{RESET}")
+                            print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results regarding Iconic References like: {str(pop_culture_mentions)}.{RESET}")
                          else:
                             print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
                    elif rowCategory == "7":
