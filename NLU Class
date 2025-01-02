@@ -29,10 +29,10 @@ class QuadraNLU:
       ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background", "going on"],
 
       # advice-seeking questions
-      ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid"],
+      ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid", "therap"],
 
       # economic questions
-      ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom"]
+      ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom", "buy"]
  ]
 
  # list of possible geographical cities/states/countries [mildly-exhaustive]
@@ -182,7 +182,16 @@ class QuadraNLU:
  # private method that takes the original sentence inputted by the user and then removes suffixes; local change not global
  # already implemented, no need to worry
  def __stemWord(self, userInput):
-    return re.sub(r'\b(?!(is, going on\b))(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|ity|ics|in|inate|ance|ive|al)\b', '', userInput)
+    predefined_exclusions = ["is", "going on"]
+    ignored_words = predefined_exclusions + self.specificPlaceList + self.specificPopCultureList
+    ignored_pattern = '|'.join(map(re.escape, ignored_words))
+
+    regex = rf'\b(?!(?:{ignored_pattern})\b)' \
+            r'(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|' \
+            r'ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|' \
+            r'ity|ics|in|inate|ance|ive|al|ist|ists)\b'
+
+    return re.sub(regex, '', userInput, flags=re.IGNORECASE)
 
  # private method that finds any key data similar to the list above that might be misspelled to reinterpret input ~ similarity >= 70%
  # already implemented, no need to worry
@@ -218,18 +227,22 @@ class QuadraNLU:
                                                       r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
                                                       r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
                                                       r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
-                                                      r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom)", userInput))
+                                                      r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap)", userInput))
 
      # assigns "result" dictionary its appropriate question_type and identifier
      if not identifier:
          if self.__autoCorrect(userInput, self.possibleList) is not None:
             identifier.extend(self.__autoCorrect(userInput, self.possibleList))
-            identifiers = self.__remove_duplicate(identifier)
-     
+            identifier = self.__remove_duplicate(identifier)
+
      # if multiple "identifier" was found, it only considers one
-     identifier = random.sample(identifier, 1)
+     if identifier:
+        identifier = random.sample(identifier, 1)
+        self.correctedWord.extend(identifier)
+     else:
+        identifier = None
      result =  {"QT": question_type, "I": identifier}
-     self.correctedWord.extend(identifier)
+     print(result)
      return result
 
  # analyzes combinations of punctuations like "!", "?", "...", and CAPS-LOCK to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
