@@ -167,12 +167,12 @@ while user_input != "stop":
                     elif rowCategory == "6":
                           if place_mentions != "" and pop_culture_mentions != "":
                              print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results regarding the following places: {str(place_mentions)}.{RESET}")
-                             print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded them due its irrelevancy to advice giving.{RESET}")
+                             print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded it due its irrelevancy to advice giving.{RESET}")
                           elif place_mentions != "":
                              print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results in the following places: {str(place_mentions)}.{RESET}")
                           elif pop_culture_mentions != "":
                              print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
-                             print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded them due its irrelevancy to advice giving.{RESET}")
+                             print(f"{BLUE}However, you mentioned Iconic References like {str(pop_culture_mentions)}, yet I disregarded it due its irrelevancy to advice giving.{RESET}")
                           else:
                              print(f"{BLUE}practical and insightful advice designed to offer you the most effective guidance for better decision-making and results.{RESET}")
                     elif rowCategory == "7":
@@ -184,12 +184,12 @@ while user_input != "stop":
                              print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights in relevancy to {str(pop_culture_mentions)}.{RESET}")
                           else:
                              print(f"{BLUE}accurate and comprehensive explanation tailored to your inquiries about financial costs, pricing, and availability, designed to provide clarity and actionable insights grounded in real-world relevance.{RESET}")
-                    user_input = input("\nIs my understanding right? Type 'Y' for Yes or 'N' for No: ")
-                    print("Glad I am doing it right. Data has been noted!") if (user_input.__contains__("Y") or user_input.__contains__("y")) else input("In what way should I have interpreted the response: ")
+                    user_input = input("\nIs my understanding right? Type 'Y' for Yes or 'N' for No: ").lower()
+                    print("Glad I am doing it right. Data has been noted!") if user_input.__contains__("y") else input("In what way should I have interpreted the response: ")
                     print("Thank you for your feedback!\n")
-                    user_input = input("\nAsk me anything (or type 'stop' to end): ").lower()
+                    user_input = input("\nAsk me anything (or type 'stop' to end): ")
         else:
-              user_input = input(f"\nThis question is unrecognizable. Try again or type 'stop': ").lower()
+              user_input = input(f"\nThis question is unrecognizable. Try again or type 'stop': ")
 
 # post-program time display and feedback system
 end_time = time.time()
