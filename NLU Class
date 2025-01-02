@@ -2,6 +2,7 @@
 # This can be used in any program to naturally analyze human language
 
 import re
+import random
 class QuadraNLU:
 
  # to utilize these datasets: make QuadraNLU object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
@@ -32,7 +33,7 @@ class QuadraNLU:
 
       # economic questions
       ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom"]
- ] 
+ ]
 
 
  # list of possible geographical cities/states/countries [mildly-exhaustive]
@@ -226,9 +227,9 @@ class QuadraNLU:
          if self.__autoCorrect(userInput, self.possibleList) is not None:
             identifiers.extend(self.__autoCorrect(userInput, self.possibleList))
             identifiers = self.__remove_duplicate(identifiers)
+     identifiers = random.sample(identifiers, 1)
      result =  {"QT": question_type, "I": identifiers}
      self.correctedWord.extend(identifiers)
-     print(result)
      return result
 
  # analyzes combinations of punctuations like "!", "?", "...", and CAPS-LOCK to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
