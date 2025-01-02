@@ -35,7 +35,6 @@ class QuadraNLU:
       ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom"]
  ]
 
-
  # list of possible geographical cities/states/countries [mildly-exhaustive]
  specificPlaceList = [
 
@@ -131,7 +130,6 @@ class QuadraNLU:
      "Fiat", "Alfa Romeo", "Citroën", "Dodge", "Chrysler", "Cadillac", "Acura", "Infiniti", "GMC", "Nissan", "Suzuki"
  ]
 
-
  # helper list that is used for REDUCING autocorrect misinterpretations
  # already implemented, no need to worry
  autocorrectExceptions = [
@@ -215,7 +213,7 @@ class QuadraNLU:
  def parsedData(self, userInput):
      userInput = self.__stemWord(userInput)
      question_type = self.__remove_duplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
-     identifiers = self.__remove_duplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
+     identifier = self.__remove_duplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
                                                       r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
                                                       r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
                                                       r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
@@ -223,13 +221,15 @@ class QuadraNLU:
                                                       r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom)", userInput))
 
      # assigns "result" dictionary its appropriate question_type and identifier
-     if not identifiers:
+     if not identifier:
          if self.__autoCorrect(userInput, self.possibleList) is not None:
-            identifiers.extend(self.__autoCorrect(userInput, self.possibleList))
-            identifiers = self.__remove_duplicate(identifiers)
-     identifiers = random.sample(identifiers, 1)
-     result =  {"QT": question_type, "I": identifiers}
-     self.correctedWord.extend(identifiers)
+            identifier.extend(self.__autoCorrect(userInput, self.possibleList))
+            identifiers = self.__remove_duplicate(identifier)
+     
+     # if multiple "identifier" was found, it only considers one
+     identifier = random.sample(identifier, 1)
+     result =  {"QT": question_type, "I": identifier}
+     self.correctedWord.extend(identifier)
      return result
 
  # analyzes combinations of punctuations like "!", "?", "...", and CAPS-LOCK to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
