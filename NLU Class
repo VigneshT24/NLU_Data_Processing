@@ -1,13 +1,13 @@
-# Engine Name: NLU Quadra
-# Created By: Vignesh Thondikulam
+# NLU Engine Name: Quadra
+# Developed By: Vignesh Thondikulam
 # This can be used in any program to naturally analyze human language
-# As of 12/27/2024, this is the most complete package of the NLU Quadra Engine
+# As of 1/1/2025, this is the most complete package of the NLU Quadra Engine
 
 import re
 class QuadraNLU:
 
   # to utilize these datasets: make QuadraNLU object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
-  # purpose of these lists are for the computer to recognize words or patterns from user_input to better decipher queries
+  # purpose of these lists [private exception] are for the computer to recognize words or patterns from user_input to better decipher queries
   # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
   possibleList = [["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"], # direct-answer question
                   ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"], # health-related questions
@@ -113,6 +113,42 @@ class QuadraNLU:
       "Fiat", "Alfa Romeo", "Citroën", "Dodge", "Chrysler", "Cadillac", "Acura", "Infiniti", "GMC", "Nissan", "Suzuki"
   ]
 
+  # helper list that is used for REDUCING autocorrect misinterpretations
+  # already implemented, no need to worry
+  autocorrectExceptions = [
+
+      # Common question words
+      "what", "who", "why", "where", "when", "how",
+
+      # Modal verbs and auxiliaries
+      "will", "can", "shall", "should", "could", "would", "may", "might", "must", "do", "does", "did", "is", "are",
+      "was", "were", "be",
+
+      # Common commands and suggestions
+      "play", "lets", "let", "go", "stop", "run", "walk", "come", "get", "give", "tell", "show", "find", "make",
+      "take",
+
+      # Logical words
+      "if", "and", "or", "but", "nor", "yet", "so", "because", "since", "as", "while", "though", "although", "unless",
+      "until",
+
+      # Frequently used pronouns and identifiers
+      "this", "that", "these", "those", "it", "they", "them", "we", "us", "he", "she", "him", "her", "you", "I", "me",
+
+      # Short confirmation or negation words
+      "yes", "no", "not", "ok", "okay", "yeah", "nah",
+
+      # Time-related words
+      "today", "tomorrow", "yesterday", "now", "then", "soon", "later", "always", "never", "sometimes", "often",
+
+      # Prepositions and conjunctions
+      "in", "on", "at", "with", "by", "for", "to", "of", "off", "about", "above", "below", "before", "after", "during",
+
+      # Miscellaneous
+      "why", "try", "ask", "fix", "put", "set", "read", "write", "say", "speak", "think", "feel", "know", "see", "hear",
+      "want"
+  ]
+
   # words that are autocorrected
   # to utilize correctedWord: once a word is implicitly autocorrected, you can call this variable to get access to the autocorrected word(s) for any purpose (e.g. access and print the autocorrected word(s) to make it more explicit)
   correctedWord = []
@@ -129,12 +165,13 @@ class QuadraNLU:
   # private method that takes the original sentence inputted by the user and then removes suffixes; local change not global
   # already implemented, no need to worry
   def __stemWord(self, userInput):
-     return re.sub(r'\b(?!(is|going on\b))(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|ity|ics|in|inate|ance|ive|al)\b', '', userInput)
+     return re.sub(r'\b(?!(is, going on\b))(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|ity|ics|in|inate|ance|ive|al)\b', '', userInput)
 
   # private method that finds any key data similar to the list above that might be misspelled to reinterpret input ~ similarity >= 70%
   # already implemented, no need to worry
   def __autoCorrect(self, userInput, c_list):
       inputList = userInput.split()
+      inputList = [word for word in inputList if word.lower() not in self.autocorrectExceptions]
       count = 0
       result = []
       for r in range(len(c_list)):
@@ -173,6 +210,7 @@ class QuadraNLU:
              identifiers = self.__remove_duplicate(identifiers)
       result =  {"QT": question_type, "I": identifiers}
       self.correctedWord.extend(identifiers)
+      print(result)
       return result
 
   # analyzes combinations of punctuations like "!", "?", "...", and CAPS-LOCK to interpret the tone of the saved_input - returns a hashmap like {bool : string analysis}
