@@ -1,334 +1,334 @@
 # NLU Engine Name: Quadra
-# This can be used in any program to naturally analyze human languages
+# This can be used in any program to naturally analyze human languages - ENGLISH ONLY
 import re
 import random
 
 class QuadraNLU:
 
- # to utilize these datasets: make QuadraNLU object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
- # purpose of these lists are for the computer to recognize words or patterns from user_input to better decipher queries
+    # to utilize these datasets: make QuadraNLU object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
+    # purpose of these lists are for the computer to recognize words or patterns from user_input to better decipher queries
 
- # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
- possibleList = [
+    # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
+    possibleList = [
 
-      # direct-answer question
-      ["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"],
+    # direct-answer question
+    ["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"],
 
-      # health-related questions
-      ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"],
+    # health-related questions
+    ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"],
 
-      # productivity questions
-      ["calendar", "remind", "task", "schedul", "event", "deadlin", "project", "checklist", "alert", "notif", "organ", "priorit", "goal", "plann", "timelin", "focus", "track", "habit", "workflow"],
+    # productivity questions
+    ["calendar", "remind", "task", "schedul", "event", "deadlin", "project", "checklist", "alert", "notif", "organ", "priorit", "goal", "plann", "timelin", "focus", "track", "habit", "workflow"],
 
-      # entertainment questions
-      ["scor", "gam", "jok", "song", "challeng", "puzzl", "music", "lyric", "match", "adventur", "humor", "quiz", "fun", "comed", "story", "celebr", "sport", "trend"],
+    # entertainment questions
+    ["scor", "gam", "jok", "song", "challeng", "puzzl", "music", "lyric", "match", "adventur", "humor", "quiz", "fun", "comed", "story", "celebr", "sport", "trend"],
 
-      # mathematical questions
-      ["plu", "minus", "multipl", "divid", "formula", "concept", "ratio", "algebra", "geometr", "calculus", "integrat", "deriv", "vector", "probabil", "statist", "measur", "equation", "matrix", "quantit"],
+    # mathematical questions
+    ["plu", "minus", "multipl", "divid", "formula", "concept", "ratio", "algebra", "geometr", "calculus", "integrat", "deriv", "vector", "probabil", "statist", "measur", "equation", "matrix", "quantit"],
 
-      # knowledge-building question
-      ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background", "going on"],
+    # knowledge-building question
+    ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background", "going on"],
 
-      # advice-seeking questions
-      ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid", "therap"],
+    # advice-seeking questions
+    ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid", "therap"],
 
-      # economic questions
-      ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom", "buy"]
- ]
+    # economic questions
+    ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom", "buy"]
+    ]
 
- # list of possible geographical cities/states/countries [mildly-exhaustive]
- specificPlaceList = [
+    # list of possible geographical cities/states/countries [mildly-exhaustive]
+    specificPlaceList = [
 
-     # United States - States
-     "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania", "Ohio", "Georgia", "North Carolina",
-     "Michigan", "New Jersey", "Virginia", "Washington", "Arizona", "Massachusetts", "Tennessee", "Indiana", "Missouri",
-     "Maryland", "Wisconsin", "Colorado", "Minnesota", "South Carolina", "Alabama", "Louisiana", "Kentucky",
-     "Oregon", "Oklahoma", "Connecticut", "Utah", "Iowa", "Nevada", "Arkansas", "Mississippi", "Kansas", "New Mexico",
-     "Nebraska", "West Virginia", "Idaho", "Hawaii", "New Hampshire", "Maine", "Montana", "Rhode Island", "Delaware",
-     "South Dakota", "North Dakota", "Alaska", "Vermont", "Wyoming",
+    # United States - States
+    "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania", "Ohio", "Georgia", "North Carolina",
+    "Michigan", "New Jersey", "Virginia", "Washington", "Arizona", "Massachusetts", "Tennessee", "Indiana", "Missouri",
+    "Maryland", "Wisconsin", "Colorado", "Minnesota", "South Carolina", "Alabama", "Louisiana", "Kentucky",
+    "Oregon", "Oklahoma", "Connecticut", "Utah", "Iowa", "Nevada", "Arkansas", "Mississippi", "Kansas", "New Mexico",
+    "Nebraska", "West Virginia", "Idaho", "Hawaii", "New Hampshire", "Maine", "Montana", "Rhode Island", "Delaware",
+    "South Dakota", "North Dakota", "Alaska", "Vermont", "Wyoming",
 
-     # United States - Cities
-     "Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "New York City", "Houston", "Seattle",
-     "Boston", "Atlanta", "Phoenix", "Philadelphia", "San Diego", "Denver", "Dallas", "Orlando", "Tampa", "Minneapolis",
-     "Detroit", "Portland", "St. Louis", "San Antonio", "Charlotte", "Pittsburgh", "Cleveland", "Kansas City",
-     "Indianapolis", "Nashville", "Salt Lake City", "Honolulu", "Albuquerque", "Buffalo", "Sacramento", "Birmingham",
+    # United States - Cities
+    "Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "New York City", "Houston", "Seattle",
+    "Boston", "Atlanta", "Phoenix", "Philadelphia", "San Diego", "Denver", "Dallas", "Orlando", "Tampa", "Minneapolis",
+    "Detroit", "Portland", "St. Louis", "San Antonio", "Charlotte", "Pittsburgh", "Cleveland", "Kansas City",
+    "Indianapolis", "Nashville", "Salt Lake City", "Honolulu", "Albuquerque", "Buffalo", "Sacramento", "Birmingham",
 
-     # Global Cities (Major Capitals and Hubs)
-     "London", "Paris", "Berlin", "Madrid", "Rome", "Amsterdam", "Brussels", "Vienna", "Prague", "Moscow",
-     "Tokyo", "Seoul", "Beijing", "Shanghai", "Mumbai", "Delhi", "Bangalore", "Jakarta", "Manila", "Bangkok",
-     "Singapore", "Hong Kong", "Kuala Lumpur", "Dubai", "Riyadh", "Cairo", "Cape Town", "Johannesburg", "Lagos",
-     "Nairobi", "Addis Ababa", "Casablanca", "Buenos Aires", "São Paulo", "Rio de Janeiro", "Santiago",
-     "Lima", "Bogotá", "Caracas", "Mexico City", "Toronto", "Vancouver", "Sydney", "Melbourne", "Brisbane",
-     "Wellington", "Auckland", "Dublin", "Edinburgh", "Cardiff", "Belfast", "Helsinki", "Stockholm", "Oslo",
-     "Copenhagen", "Warsaw", "Budapest", "Belgrade", "Athens", "Istanbul", "Tel Aviv", "Jerusalem",
+    # Global Cities (Major Capitals and Hubs)
+    "London", "Paris", "Berlin", "Madrid", "Rome", "Amsterdam", "Brussels", "Vienna", "Prague", "Moscow",
+    "Tokyo", "Seoul", "Beijing", "Shanghai", "Mumbai", "Delhi", "Bangalore", "Jakarta", "Manila", "Bangkok",
+    "Singapore", "Hong Kong", "Kuala Lumpur", "Dubai", "Riyadh", "Cairo", "Cape Town", "Johannesburg", "Lagos",
+    "Nairobi", "Addis Ababa", "Casablanca", "Buenos Aires", "São Paulo", "Rio de Janeiro", "Santiago",
+    "Lima", "Bogotá", "Caracas", "Mexico City", "Toronto", "Vancouver", "Sydney", "Melbourne", "Brisbane",
+    "Wellington", "Auckland", "Dublin", "Edinburgh", "Cardiff", "Belfast", "Helsinki", "Stockholm", "Oslo",
+    "Copenhagen", "Warsaw", "Budapest", "Belgrade", "Athens", "Istanbul", "Tel Aviv", "Jerusalem",
 
-     # Countries
-     "United States", "Canada", "United Kingdom", "France", "Italy", "Germany", "Spain", "Mexico", "Brazil",
-     "Argentina", "South Africa", "Japan", "India", "China", "Russia", "Australia", "New Zealand", "South Korea",
-     "Vietnam", "Thailand", "Philippines", "Malaysia", "Indonesia", "Singapore", "Saudi Arabia", "United Arab Emirates",
-     "Egypt", "Morocco", "Kenya", "Nigeria", "Turkey", "Greece", "Portugal", "Sweden", "Norway", "Denmark",
-     "Netherlands", "Belgium", "Austria", "Switzerland", "Poland", "Czech Republic", "Hungary", "Romania",
-     "Bulgaria", "Serbia", "Croatia", "Slovenia", "Bosnia and Herzegovina", "Montenegro", "North Macedonia",
-     "Albania", "Ukraine", "Belarus", "Kazakhstan", "Uzbekistan", "Turkmenistan", "Kyrgyzstan", "Armenia", "Georgia",
-     "Azerbaijan", "Israel", "Jordan", "Iraq", "Iran", "Pakistan", "Afghanistan", "Bangladesh", "Nepal",
-     "Sri Lanka", "Bhutan", "Maldives", "Fiji", "Papua New Guinea", "Samoa", "Tonga", "Tuvalu",
+    # Countries
+    "United States", "Canada", "United Kingdom", "France", "Italy", "Germany", "Spain", "Mexico", "Brazil",
+    "Argentina", "South Africa", "Japan", "India", "China", "Russia", "Australia", "New Zealand", "South Korea",
+    "Vietnam", "Thailand", "Philippines", "Malaysia", "Indonesia", "Singapore", "Saudi Arabia", "United Arab Emirates",
+    "Egypt", "Morocco", "Kenya", "Nigeria", "Turkey", "Greece", "Portugal", "Sweden", "Norway", "Denmark",
+    "Netherlands", "Belgium", "Austria", "Switzerland", "Poland", "Czech Republic", "Hungary", "Romania",
+    "Bulgaria", "Serbia", "Croatia", "Slovenia", "Bosnia and Herzegovina", "Montenegro", "North Macedonia",
+    "Albania", "Ukraine", "Belarus", "Kazakhstan", "Uzbekistan", "Turkmenistan", "Kyrgyzstan", "Armenia", "Georgia",
+    "Azerbaijan", "Israel", "Jordan", "Iraq", "Iran", "Pakistan", "Afghanistan", "Bangladesh", "Nepal",
+    "Sri Lanka", "Bhutan", "Maldives", "Fiji", "Papua New Guinea", "Samoa", "Tonga", "Tuvalu",
 
-     # Regions
-     "North America", "South America", "Europe", "Asia", "Africa", "Oceania", "Caribbean", "Middle East", "Arctic",
-     "Antarctica", "Southeast Asia", "Central Asia", "Eastern Europe", "Western Europe", "Southern Africa",
-     "East Africa", "West Africa", "North Africa", "Central America", "Pacific Islands", "Scandinavia", "Balkan Peninsula",
-     "Iberian Peninsula", "Himalayas", "Sahara Desert", "Amazon Rainforest", "Great Plains", "Rocky Mountains",
-     "Andes Mountains", "Alps", "Pyrenees", "Mediterranean", "Atlantic Ocean", "Pacific Ocean", "Indian Ocean",
-     "Arctic Ocean", "Baltic Sea", "Caribbean Sea", "Gulf of Mexico", "Bering Strait", "Panama Canal", "Suez Canal"
- ]
+    # Regions
+    "North America", "South America", "Europe", "Asia", "Africa", "Oceania", "Caribbean", "Middle East", "Arctic",
+    "Antarctica", "Southeast Asia", "Central Asia", "Eastern Europe", "Western Europe", "Southern Africa",
+    "East Africa", "West Africa", "North Africa", "Central America", "Pacific Islands", "Scandinavia", "Balkan Peninsula",
+    "Iberian Peninsula", "Himalayas", "Sahara Desert", "Amazon Rainforest", "Great Plains", "Rocky Mountains",
+    "Andes Mountains", "Alps", "Pyrenees", "Mediterranean", "Atlantic Ocean", "Pacific Ocean", "Indian Ocean",
+    "Arctic Ocean", "Baltic Sea", "Caribbean Sea", "Gulf of Mexico", "Bering Strait", "Panama Canal", "Suez Canal"
+    ]
 
- # list of possible pop-culture references [mildly-exhaustive]
- specificPopCultureList = [
+    # list of possible pop-culture references [mildly-exhaustive]
+    specificPopCultureList = [
 
-     # Movies
-     "The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction",
-     "Back to the Future", "The Lion King", "Avatar", "Inception", "Frozen", "The Dark Knight", "Forrest Gump", "The Shawshank Redemption",
-     "The Lord of the Rings", "Spider-Man", "Iron Man", "Black Panther", "Top Gun", "Wonder Woman", "Captain America",
-     "Finding Nemo", "Toy Story", "Shrek", "Cinderella", "Beauty and the Beast", "Aladdin", "Pirates of the Caribbean",
-     "The Hunger Games", "The Twilight Saga", "The Fast and the Furious", "Transformers", "The Bourne Identity", "Rocky",
-     "Creed", "A Quiet Place", "The Social Network", "The Joker", "Interstellar", "Goodfellas", "La La Land", "Coco",
-     "Encanto", "Zootopia", "Minions", "Moana", "Despicable Me", "The Little Mermaid", "Dune", "Oppenheimer", "Barbie", "Mission Impossible",
+    # Movies
+    "The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction",
+    "Back to the Future", "The Lion King", "Avatar", "Inception", "Frozen", "The Dark Knight", "Forrest Gump", "The Shawshank Redemption",
+    "The Lord of the Rings", "Spider-Man", "Iron Man", "Black Panther", "Top Gun", "Wonder Woman", "Captain America",
+    "Finding Nemo", "Toy Story", "Shrek", "Cinderella", "Beauty and the Beast", "Aladdin", "Pirates of the Caribbean",
+    "The Hunger Games", "The Twilight Saga", "The Fast and the Furious", "Transformers", "The Bourne Identity", "Rocky",
+    "Creed", "A Quiet Place", "The Social Network", "The Joker", "Interstellar", "Goodfellas", "La La Land", "Coco",
+    "Encanto", "Zootopia", "Minions", "Moana", "Despicable Me", "The Little Mermaid", "Dune", "Oppenheimer", "Barbie", "Mission Impossible",
 
-     # Brands
-     "Apple", "Nike", "Tesla", "Coca-Cola", "McDonald’s", "Amazon", "Google", "Adidas", "Disney", "Microsoft", "Nvidia",
-     "Samsung", "Sony", "Intel", "Pepsi", "Starbucks", "Walmart", "Gucci", "Louis Vuitton", "Chanel", "Hermès", "Prada",
-     "Zara", "H&M", "Patagonia", "North Face", "Rolex", "Omega", "Lego", "Spotify", "Netflix", "YouTube", "Meta",
-     "TikTok", "Snapchat", "Bose", "PlayStation", "Xbox", "Nintendo", "Uber", "Lyft", "FedEx", "UPS", "Airbnb", "Balenciaga",
-     "Booking.com", "American Express", "Visa", "Mastercard", "Gucci", "Dior", "Cartier", "Burberry", "Versace", "Tiffany & Co.",
+    # Brands
+    "Apple", "Nike", "Tesla", "Coca-Cola", "McDonald’s", "Amazon", "Google", "Adidas", "Disney", "Microsoft", "Nvidia",
+    "Samsung", "Sony", "Intel", "Pepsi", "Starbucks", "Walmart", "Gucci", "Louis Vuitton", "Chanel", "Hermès", "Prada",
+    "Zara", "H&M", "Patagonia", "North Face", "Rolex", "Omega", "Lego", "Spotify", "Netflix", "YouTube", "Meta",
+    "TikTok", "Snapchat", "Bose", "PlayStation", "Xbox", "Nintendo", "Uber", "Lyft", "FedEx", "UPS", "Airbnb", "Balenciaga",
+    "Booking.com", "American Express", "Visa", "Mastercard", "Gucci", "Dior", "Cartier", "Burberry", "Versace", "Tiffany & Co.",
 
-     # TV Shows
-     "Friends", "Game of Thrones", "The Office", "Stranger Things", "Breaking Bad", "The Simpsons", "The Mandalorian",
-     "The Crown", "The Walking Dead", "Westworld", "How I Met Your Mother", "Seinfeld", "Parks and Recreation", "Brooklyn Nine-Nine",
-     "Big Bang Theory", "Schitt’s Creek", "Succession", "House of the Dragon", "Euphoria", "Wednesday", "Squid Game",
-     "The Witcher", "Better Call Saul", "Mad Men", "Lost", "Grey’s Anatomy", "Dexter", "Buffy the Vampire Slayer",
-     "The Sopranos", "True Detective", "The Boys", "Vikings", "The Umbrella Academy", "Arrested Development", "Fargo",
-     "American Horror Story", "Ozark", "Supernatural", "Glee", "Suits", "Yellowstone", "The Last of Us", "Peaky Blinders",
+    # TV Shows
+    "Friends", "Game of Thrones", "The Office", "Stranger Things", "Breaking Bad", "The Simpsons", "The Mandalorian",
+    "The Crown", "The Walking Dead", "Westworld", "How I Met Your Mother", "Seinfeld", "Parks and Recreation", "Brooklyn Nine-Nine",
+    "Big Bang Theory", "Schitt’s Creek", "Succession", "House of the Dragon", "Euphoria", "Wednesday", "Squid Game",
+    "The Witcher", "Better Call Saul", "Mad Men", "Lost", "Grey’s Anatomy", "Dexter", "Buffy the Vampire Slayer",
+    "The Sopranos", "True Detective", "The Boys", "Vikings", "The Umbrella Academy", "Arrested Development", "Fargo",
+    "American Horror Story", "Ozark", "Supernatural", "Glee", "Suits", "Yellowstone", "The Last of Us", "Peaky Blinders",
 
-     # Artists
-     "The Beatles", "Beyoncé", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake",
-     "Lady Gaga", "Eminem", "Ed Sheeran", "Justin Bieber", "Adele", "Rihanna", "Billie Eilish", "The Rolling Stones",
-     "Queen", "Pink Floyd", "Led Zeppelin", "Coldplay", "Bruno Mars", "Kendrick Lamar", "Harry Styles", "Doja Cat",
-     "Lil Nas X", "Shawn Mendes", "Bad Bunny", "Karol G", "Shakira", "Jennifer Lopez", "Mariah Carey", "Celine Dion",
-     "Taylor Swift", "Frank Sinatra", "Whitney Houston", "Prince", "ABBA", "Bee Gees", "Fleetwood Mac", "John Legend",
-     "Post Malone", "The Weeknd", "Selena Gomez", "BTS", "Blackpink", "Twice", "EXO", "Stray Kids", "Gorillaz", "Imagine Dragons",
+    # Artists
+    "The Beatles", "Beyoncé", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake",
+    "Lady Gaga", "Eminem", "Ed Sheeran", "Justin Bieber", "Adele", "Rihanna", "Billie Eilish", "The Rolling Stones",
+    "Queen", "Pink Floyd", "Led Zeppelin", "Coldplay", "Bruno Mars", "Kendrick Lamar", "Harry Styles", "Doja Cat",
+    "Lil Nas X", "Shawn Mendes", "Bad Bunny", "Karol G", "Shakira", "Jennifer Lopez", "Mariah Carey", "Celine Dion",
+    "Taylor Swift", "Frank Sinatra", "Whitney Houston", "Prince", "ABBA", "Bee Gees", "Fleetwood Mac", "John Legend",
+    "Post Malone", "The Weeknd", "Selena Gomez", "BTS", "Blackpink", "Twice", "EXO", "Stray Kids", "Gorillaz", "Imagine Dragons",
 
-     # Video Games
-     "Super Mario Bros.", "Minecraft", "Fortnite", "The Legend of Zelda", "Call of Duty", "Grand Theft Auto", "Pokémon",
-     "League of Legends", "FIFA", "The Witcher", "Overwatch", "World of Warcraft", "Roblox", "Valorant", "Apex Legends",
-     "Counter-Strike", "Elden Ring", "Dark Souls", "Halo", "Assassin's Creed", "God of War", "Red Dead Redemption",
-     "The Sims", "Animal Crossing", "Among Us", "Tetris", "Pac-Man", "Donkey Kong", "Fall Guys", "Candy Crush", "Diablo",
-     "Horizon Zero Dawn", "Cyberpunk 2077", "Battlefield", "Street Fighter", "Tekken", "PUBG", "Clash of Clans", "Clash Royale",
+    # Video Games
+    "Super Mario Bros.", "Minecraft", "Fortnite", "The Legend of Zelda", "Call of Duty", "Grand Theft Auto", "Pokémon",
+    "League of Legends", "FIFA", "The Witcher", "Overwatch", "World of Warcraft", "Roblox", "Valorant", "Apex Legends",
+    "Counter-Strike", "Elden Ring", "Dark Souls", "Halo", "Assassin's Creed", "God of War", "Red Dead Redemption",
+    "The Sims", "Animal Crossing", "Among Us", "Tetris", "Pac-Man", "Donkey Kong", "Fall Guys", "Candy Crush", "Diablo",
+    "Horizon Zero Dawn", "Cyberpunk 2077", "Battlefield", "Street Fighter", "Tekken", "PUBG", "Clash of Clans", "Clash Royale",
 
-     # Automotive Brands
-     "Rolls-Royce", "Ferrari", "Lamborghini", "Porsche", "Maserati", "Bentley", "Aston Martin", "Bugatti", "McLaren",
-     "Mercedes-Benz", "Lexus", "BMW", "Audi", "Toyota", "Honda", "Ford", "Chevrolet", "Jeep", "Hyundai", "Kia", "Mazda",
-     "Subaru", "Volkswagen", "Jaguar", "Land Rover", "Tesla", "Rivian", "Lucid Motors", "Volvo", "Peugeot", "Renault",
-     "Fiat", "Alfa Romeo", "Citroën", "Dodge", "Chrysler", "Cadillac", "Acura", "Infiniti", "GMC", "Nissan", "Suzuki"
- ]
+    # Automotive Brands
+    "Rolls-Royce", "Ferrari", "Lamborghini", "Porsche", "Maserati", "Bentley", "Aston Martin", "Bugatti", "McLaren",
+    "Mercedes-Benz", "Lexus", "BMW", "Audi", "Toyota", "Honda", "Ford", "Chevrolet", "Jeep", "Hyundai", "Kia", "Mazda",
+    "Subaru", "Volkswagen", "Jaguar", "Land Rover", "Tesla", "Rivian", "Lucid Motors", "Volvo", "Peugeot", "Renault",
+    "Fiat", "Alfa Romeo", "Citroën", "Dodge", "Chrysler", "Cadillac", "Acura", "Infiniti", "GMC", "Nissan", "Suzuki"
+    ]
 
- # helper list that is used for REDUCING autocorrect misinterpretations
- # already implemented, no need to worry
- autocorrectExceptions = [
+    # helper list that is used for REDUCING autocorrect misinterpretations
+    # already implemented, no need to worry
+    autocorrectExceptions = [
 
-     # Common question words
-     "what", "who", "why", "where", "when", "how",
+    # Common question words
+    "what", "who", "why", "where", "when", "how",
 
-     # Modal verbs and auxiliaries
-     "will", "can", "shall", "should", "could", "would", "may", "might", "must", "do", "does", "did", "is", "are",
-     "was", "were", "be",
+    # Modal verbs and auxiliaries
+    "will", "can", "shall", "should", "could", "would", "may", "might", "must", "do", "does", "did", "is", "are",
+    "was", "were", "be",
 
-     # Common commands and suggestions
-     "play", "lets", "let", "go", "stop", "run", "walk", "come", "get", "give", "tell", "show", "find", "make",
-     "take",
+    # Common commands and suggestions
+    "play", "lets", "let", "go", "stop", "run", "walk", "come", "get", "give", "tell", "show", "find", "make",
+    "take",
 
-     # Logical words
-     "if", "and", "or", "but", "nor", "yet", "so", "because", "since", "as", "while", "though", "although", "unless",
-     "until",
+    # Logical words
+    "if", "and", "or", "but", "nor", "yet", "so", "because", "since", "as", "while", "though", "although", "unless",
+    "until",
 
-     # Frequently used pronouns and identifiers
-     "this", "that", "these", "those", "it", "they", "them", "we", "us", "he", "she", "him", "her", "you", "I", "me",
+    # Frequently used pronouns and identifiers
+    "this", "that", "these", "those", "it", "they", "them", "we", "us", "he", "she", "him", "her", "you", "I", "me",
 
-     # Short confirmation or negation words
-     "yes", "no", "not", "ok", "okay", "yeah", "nah",
+    # Short confirmation or negation words
+    "yes", "no", "not", "ok", "okay", "yeah", "nah",
 
-     # Time-related words
-     "today", "tomorrow", "yesterday", "now", "then", "soon", "later", "always", "never", "sometimes", "often",
+    # Time-related words
+    "today", "tomorrow", "yesterday", "now", "then", "soon", "later", "always", "never", "sometimes", "often",
 
-     # Prepositions and conjunctions
-     "in", "on", "at", "with", "by", "for", "to", "of", "off", "about", "above", "below", "before", "after", "during",
+    # Prepositions and conjunctions
+    "in", "on", "at", "with", "by", "for", "to", "of", "off", "about", "above", "below", "before", "after", "during",
 
-     # Miscellaneous
-     "why", "try", "ask", "fix", "put", "set", "read", "write", "say", "speak", "think", "feel", "know", "see", "hear",
-     "want"
- ]
+    # Miscellaneous
+    "why", "try", "ask", "fix", "put", "set", "read", "write", "say", "speak", "think", "feel", "know", "see", "hear",
+    "want"
+    ]
 
- # words that are autocorrected
- # to utilize correctedWord: once a word is implicitly autocorrected, you can call this variable to get access to the autocorrected word(s) for any purpose (e.g. access and print the autocorrected word(s) to make it more explicit)
- correctedWord = []
+    # words that are autocorrected
+    # to utilize correctedWord: once a word is implicitly autocorrected, you can call this variable to get access to the autocorrected word(s) for any purpose (e.g. access and print the autocorrected word(s) to make it more explicit)
+    correctedWord = []
 
- def __removeDuplicate(self, list):
-     """
-        __removeDuplicate Method
-        =======================
+    def __removeDuplicate(self, list):
+        """
+            __removeDuplicate Method
+            =======================
 
-        Description:
+            Description:
             Removes duplicate elements from a list while preserving the order.
 
-        Parameters:
+            Parameters:
             list: A list of elements to remove duplicates from.
 
-        Returns:
+            Returns:
             New List: A list with duplicates removed.
 
-        Raises:
+            Raises:
             TypeError: If 'list' is not a list.
-     """
-     accList = []
-     for i in list:
-         if i not in accList:
-             accList.append(i)
-     return accList
+        """
+        accList = []
+        for i in list:
+            if i not in accList:
+                accList.append(i)
+        return accList
 
- def __stemWord(self, userInput):
-    """
-        __stemWord Method
-        =======================
+    def __stemWord(self, userInput):
+        """
+            __stemWord Method
+            =======================
 
-        Description:
+            Description:
             Removes all instances of suffixes in userInput to achieve base word for easy interpretation
 
-        Parameters:
+            Parameters:
             userInput: An input from the user that will be stemmed
 
-        Returns:
+            Returns:
             Modified Input: A modified input after removing suffixes from userInput
 
-        Raises:
+            Raises:
             TypeError: If 'userInput' is not a string
-    """
-    predefined_exclusions = ["is", "going on"]
-    ignored_words = predefined_exclusions + self.specificPlaceList + self.specificPopCultureList
-    ignored_pattern = '|'.join(map(re.escape, ignored_words))
+        """
+        predefined_exclusions = ["is", "going on"]
+        ignored_words = predefined_exclusions + self.specificPlaceList + self.specificPopCultureList
+        ignored_pattern = '|'.join(map(re.escape, ignored_words))
 
-    regex = rf'\b(?!(?:{ignored_pattern})\b)' \
-            r'(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|' \
-            r'ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|' \
-            r'ity|ics|in|inate|ance|ive|al|ist|ists)\b'
+        regex = rf'\b(?!(?:{ignored_pattern})\b)' \
+        r'(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|' \
+        r'ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|' \
+        r'ity|ics|in|inate|ance|ive|al|ist|ists)\b'
 
-    return re.sub(regex, '', userInput, flags=re.IGNORECASE)
+        return re.sub(regex, '', userInput, flags=re.IGNORECASE)
 
- def __autoCorrect(self, userInput, c_list):
-     """
-        __autoCorrect Method
-        =======================
+    def __autoCorrect(self, userInput, c_list):
+        """
+            __autoCorrect Method
+            =======================
 
-        Description:
+            Description:
             Spellchecks and corrects words in userInput in accordance to c_list
 
-        Parameters:
+            Parameters:
             userInput: An input by the user that will be autocorrect
             c_list: a dictionary list used to compare possibly misspelled words against it to replace it
 
-        Returns:
+            Returns:
             result: A list with all corrected words (identifier) for proper interpretation
 
-        Raises:
+            Raises:
             TypeError: If 'userInput' is not a string and 'c_list' is not a list.
-     """
-     inputList = userInput.split()
-     inputList = [word for word in inputList if word.lower() not in self.autocorrectExceptions]
-     count = 0
-     result = []
-     for r in range(len(c_list)):
-         for c in range(len(c_list[r])):
-             for n in inputList:
-                 iter = min(len(n), len(c_list[r][c]))
-                 for i in range(iter):
-                     if list(n).__getitem__(i) == list(c_list[r][c]).__getitem__(i):
-                         count += 1
-                     elif (i + 1) < len(c_list[r][c]):
-                         if list(n).__getitem__(i) == list(c_list[r][c]).__getitem__(i + 1):
-                             count += 1
-                     if (count / max(len(n), len(c_list[r][c]))) * 100 >= 70:
-                         result.append(c_list[r][c])
-                 count = 0
-     return result if result else None
+        """
+        inputList = userInput.split()
+        inputList = [word for word in inputList if word.lower() not in self.autocorrectExceptions]
+        count = 0
+        result = []
+        for r in range(len(c_list)):
+            for c in range(len(c_list[r])):
+                for n in inputList:
+                    iter = min(len(n), len(c_list[r][c]))
+                    for i in range(iter):
+                        if list(n).__getitem__(i) == list(c_list[r][c]).__getitem__(i):
+                            count += 1
+                        elif (i + 1) < len(c_list[r][c]):
+                            if list(n).__getitem__(i) == list(c_list[r][c]).__getitem__(i + 1):
+                                count += 1
+                    if (count / max(len(n), len(c_list[r][c]))) * 100 >= 70:
+                        result.append(c_list[r][c])
+                count = 0
+        return result if result else None
 
- def parsedData(self, userInput):
-     """
-        parsedData Method
-        =======================
-
-        Description:
+    def parsedData(self, userInput):
+        """
+            parsedData Method
+            =======================
+            
+            Description:
             The most important method as it returns parsed and proper "Question Type" [QT] and "Identifier" [I] for other programs using this engine for NLU
-
-        Parameters:
+            
+            Parameters:
             userInput: An input from user that is used to parse and extract information from
-
-        Returns:
+            
+            Returns:
             result: A dictionary (hash-map) that includes Question Type and Identifier that other programs can process
-
-        Raises:
+            
+            Raises:
             TypeError: If 'userInput' is not a string.
-     """
-     userInput = self.__stemWord(userInput)
-     question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
-     identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
-                                                      r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
-                                                      r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
-                                                      r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
-                                                      r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
-                                                      r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap)", userInput))
+        """
+        userInput = self.__stemWord(userInput)
+        question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
+        identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
+                      r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
+                      r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
+                      r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
+                      r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
+                      r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap)", userInput))
+    
+        # assigns "result" dictionary its appropriate question_type and identifier
+        if not identifier:
+            if self.__autoCorrect(userInput, self.possibleList) is not None:
+                identifier.extend(self.__autoCorrect(userInput, self.possibleList))
+                identifier = self.__removeDuplicate(identifier)
+    
+        # if multiple "identifier" was found, it only considers one
+        if identifier:
+            identifier = random.sample(identifier, 1)
+            self.correctedWord.extend(identifier)
+        else:
+            identifier = None
+        result =  {"QT": question_type, "I": identifier}
+        return result
 
-     # assigns "result" dictionary its appropriate question_type and identifier
-     if not identifier:
-         if self.__autoCorrect(userInput, self.possibleList) is not None:
-            identifier.extend(self.__autoCorrect(userInput, self.possibleList))
-            identifier = self.__removeDuplicate(identifier)
-
-     # if multiple "identifier" was found, it only considers one
-     if identifier:
-        identifier = random.sample(identifier, 1)
-        self.correctedWord.extend(identifier)
-     else:
-        identifier = None
-     result =  {"QT": question_type, "I": identifier}
-     return result
-
- def sentimentAnalysis(self, saved_input):
-     """
-        sentimentAnalysis Method
-        =======================
-
-        Description:
+    def sentimentAnalysis(self, saved_input):
+        """
+            sentimentAnalysis Method
+            =======================
+            
+            Description:
             Uses saved_input to determine the tone of the given input and returns the analysis
-
-        Parameters:
+            
+            Parameters:
             saved_input: An input from the user that will be analyzed
-
-        Returns:
+            
+            Returns:
             result: A dictionary [hash-map] that contains the type of sentiment analyzed
-
-        Raises:
+            
+            Raises:
             TypeError: If 'saved_input' is not a string
-     """
-     result = {False: []}
-     if saved_input.__contains__("!") and saved_input.__contains__("?"):
-         result = {True: ["exclamation", "question"]}
-     elif saved_input.__contains__("!"):
-         result = {True: ["exclamation"]}
-     elif saved_input.__contains__("?"):
-         result = {True: ["question"]}
-     elif saved_input.__contains__("...") or saved_input.__contains__(".."):
-         result = {True: ["uncertainty"]}
-     if saved_input.isupper():
-         if True in result:
-             result[True].append("caps-lock")
-         else:
-             result = {True: ["caps-lock"]}
-     return result
+        """
+        result = {False: []}
+        if saved_input.__contains__("!") and saved_input.__contains__("?"):
+            result = {True: ["exclamation", "question"]}
+        elif saved_input.__contains__("!"):
+            result = {True: ["exclamation"]}
+        elif saved_input.__contains__("?"):
+            result = {True: ["question"]}
+        elif saved_input.__contains__("...") or saved_input.__contains__(".."):
+            result = {True: ["uncertainty"]}
+        if saved_input.isupper():
+            if True in result:
+                result[True].append("caps-lock")
+            else:
+                result = {True: ["caps-lock"]}
+        return result
