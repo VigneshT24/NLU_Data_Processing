@@ -173,7 +173,7 @@ class QuadraNLU:
 
     def __removeDuplicate(self, list):
         """
-            __removeDuplicate Method
+            __removeDuplicate Method {private}
             =======================
 
             Description:
@@ -196,7 +196,7 @@ class QuadraNLU:
 
     def __stemWord(self, userInput):
         """
-            __stemWord Method
+            __stemWord Method {private}
             =======================
 
             Description:
@@ -224,7 +224,7 @@ class QuadraNLU:
 
     def __autoCorrect(self, userInput, c_list):
         """
-            __autoCorrect Method
+            __autoCorrect Method {private}
             =======================
 
             Description:
@@ -263,16 +263,16 @@ class QuadraNLU:
         """
             parsedData Method
             =======================
-            
+
             Description:
             The most important method as it returns parsed and proper "Question Type" [QT] and "Identifier" [I] for other programs using this engine for NLU
-            
+
             Parameters:
             userInput: An input from user that is used to parse and extract information from
-            
+
             Returns:
             result: A dictionary (hash-map) that includes Question Type and Identifier that other programs can process
-            
+
             Raises:
             TypeError: If 'userInput' is not a string.
         """
@@ -284,13 +284,13 @@ class QuadraNLU:
                       r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
                       r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
                       r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap)", userInput))
-    
+
         # assigns "result" dictionary its appropriate question_type and identifier
         if not identifier:
             if self.__autoCorrect(userInput, self.possibleList) is not None:
                 identifier.extend(self.__autoCorrect(userInput, self.possibleList))
                 identifier = self.__removeDuplicate(identifier)
-    
+
         # if multiple "identifier" was found, it only considers one
         if identifier:
             identifier = random.sample(identifier, 1)
@@ -304,16 +304,16 @@ class QuadraNLU:
         """
             sentimentAnalysis Method
             =======================
-            
+
             Description:
             Uses saved_input to determine the tone of the given input and returns the analysis
-            
+
             Parameters:
             saved_input: An input from the user that will be analyzed
-            
+
             Returns:
             result: A dictionary [hash-map] that contains the type of sentiment analyzed
-            
+
             Raises:
             TypeError: If 'saved_input' is not a string
         """
