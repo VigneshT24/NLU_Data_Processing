@@ -1,8 +1,8 @@
 # NLU Engine Name: Quadra
-# This can be used in any program to naturally analyze human language
-
+# This can be used in any program to naturally analyze human languages
 import re
 import random
+
 class QuadraNLU:
 
  # to utilize these datasets: make QuadraNLU object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
@@ -186,7 +186,7 @@ class QuadraNLU:
             New List: A list with duplicates removed.
 
         Raises:
-            TypeError: If 'data' is not a list.
+            TypeError: If 'list' is not a list.
      """
      accList = []
      for i in list:
@@ -200,7 +200,7 @@ class QuadraNLU:
         =======================
 
         Description:
-            Removes suffixes of all instances in userInput to achieve base word for easy interpretation
+            Removes all instances of suffixes in userInput to achieve base word for easy interpretation
 
         Parameters:
             userInput: An input from the user that will be stemmed
