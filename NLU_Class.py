@@ -311,7 +311,7 @@ class QuadraNLU:
 
         # assigns "result" dictionary its appropriate question_type and identifier
         # only execute this statement if userInput is not incomplete
-        if (self.__isIncomplete(orig_userInput, self.conjunctions, self.auxiliary_verbs, self.prepositions) == "not incomplete"):
+        if (self.__isIncomplete(orig_userInput, self.conjunctions, self.auxiliary_verbs, self.prepositions) == None):
             if not identifier:
                 if self.__autoCorrect(userInput, self.possibleList) is not None:
                     identifier.extend(self.__autoCorrect(userInput, self.possibleList))
