@@ -1,4 +1,4 @@
-from data_class import QuadraNLU
+from quadra_nlu import QuadraNLU
 from loadingModule_2 import loadingAnimation
 import sys
 import string
@@ -68,12 +68,12 @@ while user_input != "stop":
    saved_input = user_input
    user_input = user_input.lower()
    if not user_input:
-       user_input = input("Sorry, empty input is not processable, please try again or type 'stop': ")
+       user_input = input(f"{BLUE}Sorry, empty input is not processable, please try again or type 'stop':{RESET} ")
    else:
        processed_data = data_instance.parsedData(user_input)
 
        # ensures there are no error, else, redirect the issue
-       if processed_data.get("I") != None:
+       if processed_data.get("QT") != None:
              loadingAnimation()
              print("\n\n")
              for row in range(len(data_instance.possibleList)):
@@ -187,7 +187,10 @@ while user_input != "stop":
                    print("Thank you for your feedback!\n")
                    user_input = input("\nAsk me anything (or type 'stop' to end): ")
        else:
-             user_input = input(f"\nThis question is unrecognizable. Try again or type 'stop': ")
+             if processed_data.get("I") != None:  # the sentence is rather incomplete, let the user know about this
+                 user_input = input (f"\n{BLUE}{processed_data.get("I")}{RESET}")
+             else:  # query is not recognizable at all
+                 user_input = input(f"\n{BLUE}This question is unrecognizable. Try again or type 'stop':{RESET} ")
 
 # post-program time display and feedback system
 end_time = time.time()
