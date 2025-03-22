@@ -1,3 +1,4 @@
+# UPDATE TO ADD: Personalize isIncomplete result
 # NLU Engine Name: Quadra
 # This can be used in any program to naturally analyze human languages - ENGLISH ONLY
 import re
@@ -129,6 +130,28 @@ class QuadraNLU:
     "Mercedes-Benz", "Lexus", "BMW", "Audi", "Toyota", "Honda", "Ford", "Chevrolet", "Jeep", "Hyundai", "Kia", "Mazda",
     "Subaru", "Volkswagen", "Jaguar", "Land Rover", "Tesla", "Rivian", "Lucid Motors", "Volvo", "Peugeot", "Renault",
     "Fiat", "Alfa Romeo", "Citroën", "Dodge", "Chrysler", "Cadillac", "Acura", "Infiniti", "GMC", "Nissan", "Suzuki"
+    ]
+
+    # following 3 lists are used to detect specific type of incomplete sentences
+    conjunctions = [
+        "if", "but", "and", "so", "because", "or", "then", "although", "though", "whereas", "while", "unless", "until",
+        "for", "nor", "yet", "after", "as", "as if", "as long as", "as much as", "as soon as", "as though",
+        "before", "even if", "even though", "if only", "in order that", "once",
+        "provided that", "rather than", "since", "so that", "than", "that",
+        "where", "wherever", "whenever", "whether", "why"
+    ]
+
+    auxiliary_verbs = [
+        "is", "was", "were", "am", "are", "be", "being", "been", "will", "shall", "should", "would",
+        "can", "could", "may", "might", "must", "do", "does", "did", "has", "have", "had",
+        "ought", "need", "dare", "used",
+    ]
+
+    prepositions = [
+        "in", "on", "at", "for", "with", "about", "of", "by", "to", "from", "under", "over",
+        "between", "into", "onto", "without", "through", "among", "beside", "around", "before",
+        "after", "against", "during", "within", "beyond", "beneath", "behind", "above", "below",
+        "towards", "along", "across", "throughout", "into", "upon", "through", "out", "up"
     ]
 
     # helper list that is used for REDUCING autocorrect misinterpretations
@@ -276,6 +299,7 @@ class QuadraNLU:
             Raises:
             TypeError: If 'userInput' is not a string.
         """
+        orig_userInput = userInput
         userInput = self.__stemWord(userInput)
         question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
         identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
@@ -286,17 +310,20 @@ class QuadraNLU:
                       r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap)", userInput))
 
         # assigns "result" dictionary its appropriate question_type and identifier
-        if not identifier:
-            if self.__autoCorrect(userInput, self.possibleList) is not None:
-                identifier.extend(self.__autoCorrect(userInput, self.possibleList))
-                identifier = self.__removeDuplicate(identifier)
+        # only execute this statement if userInput is not incomplete
+        if (self.__isIncomplete(orig_userInput, self.conjunctions, self.auxiliary_verbs, self.prepositions) == "not incomplete"):
+            if not identifier:
+                if self.__autoCorrect(userInput, self.possibleList) is not None:
+                    identifier.extend(self.__autoCorrect(userInput, self.possibleList))
+                    identifier = self.__removeDuplicate(identifier)
 
         # if multiple "identifier" was found, it only considers one
         if identifier:
             identifier = random.sample(identifier, 1)
             self.correctedWord.extend(identifier)
         else:
-            identifier = None
+            identifier = self.__isIncomplete(orig_userInput, self.conjunctions, self.auxiliary_verbs, self.prepositions)
+            question_type = None
         result =  {"QT": question_type, "I": identifier}
         return result
 
@@ -331,4 +358,45 @@ class QuadraNLU:
                 result[True].append("caps-lock")
             else:
                 result = {True: ["caps-lock"]}
+        return result
+    def __isIncomplete(self, userInput, conjunctions, auxiliary_verbs, prepositions):
+        """
+            __isIncomplete Method {private}
+            =======================
+
+            Description:
+            goes through one of the three lists from the parameter to detect if userInput is incomplete or not
+
+            Parameters:
+            userInput: An input by the user that will be checked for possible incompleteness
+            conjunctions: a list of conjunction words to detect
+            auxiliary_verbs: a list of auxiliary verbs to detect
+            prepositions: a list of preposition words to detect
+
+            Returns:
+            result: A phrase that lets the user know, with a personalized message, that their input was incomplete
+
+            Raises:
+            TypeError: If 'userInput' is not a string
+        """
+        result = None
+        lastWord = userInput.split()[-1]
+
+        # list of possible personalized responses to incomplete queries that will be chosen at random
+        responses = [
+            f"Your sentence got cut off. You were saying: '{lastWord}', but what? Try again or type 'stop': ",
+            f"It looks like your question is incomplete. You ended with '{lastWord}', which suggests there's more to say. Could you clarify or type 'stop': ",
+            f"Hmm… your sentence stops at '{lastWord}', making it feel unfinished. What were you about to say. Try again or type 'stop': ",
+            f"You left me hanging! You said: '{lastWord}', but I think there’s more to it. Could you rephrase or type 'stop': ",
+            f"Your message seems incomplete—it ended with '{lastWord}', which usually means there's more to follow. Could you complete it or type 'stop': ",
+            f"Oops! It looks like your message trails off at '{lastWord}'. Can you finish your thought or type 'stop': ",
+            f"Uh-oh, sentence cliffhanger detected! 😆 You stopped at '{lastWord}'—but what? Don’t keep me in suspense! Try again or type 'stop': ",
+            f"It feels like you were about to say something important! You ended with '{lastWord}', but I think there’s more. Fill me in or type 'stop': ",
+        ]
+        if (any(lastWord.lower() == word.lower() for word in conjunctions)):
+            result = random.choice(responses)
+        elif (any(lastWord.lower() == word.lower() for word in auxiliary_verbs)):
+            result = random.choice(responses)
+        elif (any(lastWord.lower() == word.lower() for word in prepositions)):
+            result = random.choice(responses)
         return result
