@@ -4,4 +4,4 @@
 
 # NLU Engine Name: Quadra Engine
 
-# The "NLU Class" file contains all of the code for the Quadra NLU, the "NLU Main" is one implementation of this entry-level Natural Language Understander
+# The "NLU Class" file contains all of the code for the Quadra NLU
