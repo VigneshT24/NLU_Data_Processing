@@ -327,33 +327,33 @@ class QuadraNLU:
         result =  {"QT": question_type, "I": identifier}
         return result
 
-    def sentimentAnalysis(self, saved_input):
+    def sentimentAnalysis(self, userInput):
         """
             sentimentAnalysis Method
             =======================
 
             Description:
-            Uses saved_input to determine the tone of the given input and returns the analysis
+            Uses userInput to determine the tone of the given input and returns the analysis
 
             Parameters:
-            saved_input: An input from the user that will be analyzed
+            userInput: An input from the user that will be analyzed
 
             Returns:
             result: A dictionary [hash-map] that contains the type of sentiment analyzed
 
             Raises:
-            TypeError: If 'saved_input' is not a string
+            TypeError: If 'userInput' is not a string
         """
         result = {False: []}
-        if saved_input.__contains__("!") and saved_input.__contains__("?"):
+        if userInput.__contains__("!") and userInput.__contains__("?"):
             result = {True: ["exclamation", "question"]}
-        elif saved_input.__contains__("!"):
+        elif userInput.__contains__("!"):
             result = {True: ["exclamation"]}
-        elif saved_input.__contains__("?"):
+        elif userInput.__contains__("?"):
             result = {True: ["question"]}
-        elif saved_input.__contains__("...") or saved_input.__contains__(".."):
+        elif userInput.__contains__("...") or userInput.__contains__(".."):
             result = {True: ["uncertainty"]}
-        if saved_input.isupper():
+        if userInput.isupper():
             if True in result:
                 result[True].append("caps-lock")
             else:
