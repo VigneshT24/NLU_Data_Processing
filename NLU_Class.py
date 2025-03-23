@@ -19,7 +19,7 @@ class QuadraNLU:
     ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"],
 
     # productivity questions
-    ["calendar", "remind", "task", "schedul", "event", "deadlin", "project", "checklist", "alert", "notif", "organ", "priorit", "goal", "plann", "timelin", "focus", "track", "habit", "workflow"],
+    ["calendar", "remind", "product", "task", "schedul", "event", "deadlin", "project", "checklist", "alert", "notif", "organ", "priorit", "goal", "plann", "timelin", "focus", "track", "habit", "workflow"],
 
     # entertainment questions
     ["scor", "gam", "jok", "song", "challeng", "puzzl", "music", "lyric", "match", "adventur", "humor", "quiz", "fun", "comed", "story", "celebr", "sport", "trend"],
@@ -194,6 +194,10 @@ class QuadraNLU:
     # to utilize correctedWord: once a word is implicitly autocorrected, you can call this variable to get access to the autocorrected word(s) for any purpose (e.g. access and print the autocorrected word(s) to make it more explicit)
     __correctedWords = []
 
+    __identifier = ""
+
+    __question_type = ""
+
     def __removeDuplicate(self, list):
         """
             __removeDuplicate Method {private}
@@ -241,7 +245,7 @@ class QuadraNLU:
         regex = rf'\b(?!(?:{ignored_pattern})\b)' \
         r'(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|' \
         r'ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|' \
-        r'ity|ics|in|inate|ance|ive|al|ist|ists)\b'
+        r'ity|ics|in|inate|ance|ive|al|ist|ists|ivity)\b'
 
         return re.sub(regex, '', userInput, flags=re.IGNORECASE)
 
@@ -313,7 +317,37 @@ class QuadraNLU:
             result = "Incomplete. Ends with a preposition."
         return result
 
-    # method that returns the parsed version of the user input to boil down the intent
+    def __getInputCategory(self):
+        """
+            __getInputCategory Method {private}
+            =======================
+
+            Description:
+            finds out which category the identifier belongs to by taking advantage of the structural manner of possibleList
+
+            Returns:
+            string: gives a brief description of the type of category identifier belongs to
+
+            Raises:
+            TypeError: If member variable is not a proper data type
+        """
+        rowCategory = -1
+        for row in range(len(self.__possibleList)):
+            for column in range(len(self.__possibleList[row])):
+                for a in self.__identifier:
+                    if a.strip().lower() == self.__possibleList[row][column].strip().lower():
+                        rowCategory = row
+                        break
+        if (rowCategory == 0): return "Direct-Answer Question"
+        if (rowCategory == 1): return "Health-Related Question"
+        if (rowCategory == 2): return "Productivity Question"
+        if (rowCategory == 3): return "Entertainment Question"
+        if (rowCategory == 4): return "Mathematical Question"
+        if (rowCategory == 5): return "Knowledge-Building Question"
+        if (rowCategory == 6): return "Advice-Seeking Question"
+        if (rowCategory == 7): return "Economic-Based Question"
+        return "No Category"
+
     def parsedData(self, userInput):
         """
             parsedData Method
@@ -333,33 +367,32 @@ class QuadraNLU:
         """
         orig_userInput = userInput
         userInput = self.__stemWord(userInput)
-        question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could|i)", userInput))
-        identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
+        self.__question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could|i)", userInput))
+        self.__identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
                       r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
                       r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
                       r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
                       r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
-                      r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap)", userInput))
+                      r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap|product)", userInput))
 
         # assigns "result" dictionary its appropriate question_type and identifier
         # only execute this statement if userInput is not incomplete
         if (self.__isIncomplete(orig_userInput, self.__conjunctions, self.__auxiliary_verbs, self.__prepositions) == None):
-            if not identifier:
+            if not self.__identifier:
                 if self.__autoCorrect(userInput, self.__possibleList) is not None:
-                    identifier.extend(self.__autoCorrect(userInput, self.__possibleList))
-                    identifier = self.__removeDuplicate(identifier)
+                    self.__identifier.extend(self.__autoCorrect(userInput, self.__possibleList))
+                    self.__identifier = self.__removeDuplicate(self.__identifier)
 
         # if multiple "identifier" was found, it only considers one
-        if identifier:
-            identifier = random.sample(identifier, 1)
+        if self.__identifier:
+            identifier = random.sample(self.__identifier, 1)
             self.__correctedWords.extend(identifier)
         else:
-            identifier = self.__isIncomplete(orig_userInput, self.__conjunctions, self.__auxiliary_verbs, self.__prepositions)
-            question_type = None
-        result =  {"Question Type": question_type, "Identifier": identifier}
+            self.__identifier = self.__isIncomplete(orig_userInput, self.__conjunctions, self.__auxiliary_verbs, self.__prepositions)
+            self.__question_type = None
+        result =  {"Question Type": self.__question_type, "Identifier": self.__identifier, "Category":self.__getInputCategory()}
         return result
 
-    # method that returns the type of sentiment the user input provokes
     def sentimentAnalysis(self, userInput):
         """
             sentimentAnalysis Method
