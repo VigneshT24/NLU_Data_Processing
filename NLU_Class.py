@@ -300,7 +300,7 @@ class QuadraNLU:
         """
         orig_userInput = userInput
         userInput = self.__stemWord(userInput)
-        question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could)", userInput))
+        question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could|i)", userInput))
         identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
                       r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
                       r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
@@ -325,7 +325,7 @@ class QuadraNLU:
             question_type = None
         result =  {"QT": question_type, "I": identifier}
         return result
-        
+
     def sentimentAnalysis(self, saved_input):
         """
             sentimentAnalysis Method
@@ -358,7 +358,6 @@ class QuadraNLU:
             else:
                 result = {True: ["caps-lock"]}
         return result
-        
     def __isIncomplete(self, userInput, conjunctions, auxiliary_verbs, prepositions):
         """
             __isIncomplete Method {private}
