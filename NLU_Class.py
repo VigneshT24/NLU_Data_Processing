@@ -9,7 +9,7 @@ class QuadraNLU:
     # purpose of these lists are for the computer to recognize words or patterns from user_input to better decipher queries
 
     # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
-    possibleList = [
+    __possibleList = [
 
     # direct-answer question
     ["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"],
@@ -37,7 +37,7 @@ class QuadraNLU:
     ]
 
     # list of possible geographical cities/states/countries [mildly-exhaustive]
-    specificPlaceList = [
+    __specificPlaceList = [
 
     # United States - States
     "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania", "Ohio", "Georgia", "North Carolina",
@@ -83,7 +83,7 @@ class QuadraNLU:
     ]
 
     # list of possible pop-culture references [mildly-exhaustive]
-    specificPopCultureList = [
+    __specificPopCultureList = [
 
     # Movies
     "The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction",
@@ -132,7 +132,7 @@ class QuadraNLU:
     ]
 
     # following 3 lists are used to detect specific type of incomplete sentences
-    conjunctions = [
+    __conjunctions = [
         "if", "but", "and", "so", "because", "or", "then", "although", "though", "whereas", "while", "unless", "until",
         "for", "nor", "yet", "after", "as", "as if", "as long as", "as much as", "as soon as", "as though",
         "before", "even if", "even though", "if only", "in order that", "once",
@@ -140,13 +140,13 @@ class QuadraNLU:
         "where", "wherever", "whenever", "whether", "why"
     ]
 
-    auxiliary_verbs = [
+    __auxiliary_verbs = [
         "is", "was", "were", "am", "are", "be", "being", "been", "will", "shall", "should", "would",
         "can", "could", "may", "might", "must", "do", "does", "did", "has", "have", "had",
         "ought", "need", "dare", "used",
     ]
 
-    prepositions = [
+    __prepositions = [
         "in", "on", "at", "for", "with", "about", "of", "by", "to", "from", "under", "over",
         "between", "into", "onto", "without", "through", "among", "beside", "around", "before",
         "after", "against", "during", "within", "beyond", "beneath", "behind", "above", "below",
@@ -155,7 +155,7 @@ class QuadraNLU:
 
     # helper list that is used for REDUCING autocorrect misinterpretations
     # already implemented, no need to worry
-    autocorrectExceptions = [
+    __autocorrectExceptions = [
 
     # Common question words
     "what", "who", "why", "where", "when", "how",
@@ -234,7 +234,7 @@ class QuadraNLU:
             TypeError: If 'userInput' is not a string
         """
         predefined_exclusions = ["is", "going on"]
-        ignored_words = predefined_exclusions + self.specificPlaceList + self.specificPopCultureList
+        ignored_words = predefined_exclusions + self.__specificPlaceList + self.__specificPopCultureList
         ignored_pattern = '|'.join(map(re.escape, ignored_words))
 
         regex = rf'\b(?!(?:{ignored_pattern})\b)' \
@@ -263,7 +263,7 @@ class QuadraNLU:
             TypeError: If 'userInput' is not a string and 'c_list' is not a list.
         """
         inputList = userInput.split()
-        inputList = [word for word in inputList if word.lower() not in self.autocorrectExceptions]
+        inputList = [word for word in inputList if word.lower() not in self.__autocorrectExceptions]
         count = 0
         result = []
         for r in range(len(c_list)):
@@ -310,10 +310,10 @@ class QuadraNLU:
 
         # assigns "result" dictionary its appropriate question_type and identifier
         # only execute this statement if userInput is not incomplete
-        if (self.__isIncomplete(orig_userInput, self.conjunctions, self.auxiliary_verbs, self.prepositions) == None):
+        if (self.__isIncomplete(orig_userInput, self.__conjunctions, self.__auxiliary_verbs, self.__prepositions) == None):
             if not identifier:
-                if self.__autoCorrect(userInput, self.possibleList) is not None:
-                    identifier.extend(self.__autoCorrect(userInput, self.possibleList))
+                if self.__autoCorrect(userInput, self.__possibleList) is not None:
+                    identifier.extend(self.__autoCorrect(userInput, self.__possibleList))
                     identifier = self.__removeDuplicate(identifier)
 
         # if multiple "identifier" was found, it only considers one
@@ -321,7 +321,7 @@ class QuadraNLU:
             identifier = random.sample(identifier, 1)
             self.correctedWord.extend(identifier)
         else:
-            identifier = self.__isIncomplete(orig_userInput, self.conjunctions, self.auxiliary_verbs, self.prepositions)
+            identifier = self.__isIncomplete(orig_userInput, self.__conjunctions, self.__auxiliary_verbs, self.__prepositions)
             question_type = None
         result =  {"QT": question_type, "I": identifier}
         return result
