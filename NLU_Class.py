@@ -192,7 +192,7 @@ class QuadraNLU:
 
     # words that are autocorrected
     # to utilize correctedWord: once a word is implicitly autocorrected, you can call this variable to get access to the autocorrected word(s) for any purpose (e.g. access and print the autocorrected word(s) to make it more explicit)
-    correctedWord = []
+    __correctedWords = []
 
     def __removeDuplicate(self, list):
         """
@@ -282,6 +282,38 @@ class QuadraNLU:
                 count = 0
         return result if result else None
 
+    def __isIncomplete(self, userInput, conjunctions, auxiliary_verbs, prepositions):
+        """
+            __isIncomplete Method {private}
+            =======================
+
+            Description:
+            goes through one of the three lists from the parameter to detect if userInput is incomplete or not
+
+            Parameters:
+            userInput: An input by the user that will be checked for possible incompleteness
+            conjunctions: a list of conjunction words to detect
+            auxiliary_verbs: a list of auxiliary verbs to detect
+            prepositions: a list of preposition words to detect
+
+            Returns:
+            result: A phrase that lets the user know, with a personalized message, that their input was incomplete
+
+            Raises:
+            TypeError: If 'userInput' is not a string
+        """
+        result = None
+        lastWord = userInput.split()[-1]
+
+        if (any(lastWord.lower() == word.lower() for word in conjunctions)):
+            result = "Incomplete. Ends with a conjunction."
+        elif (any(lastWord.lower() == word.lower() for word in auxiliary_verbs)):
+            result = "Incomplete. Ends with a auxiliary verb."
+        elif (any(lastWord.lower() == word.lower() for word in prepositions)):
+            result = "Incomplete. Ends with a preposition."
+        return result
+
+    # method that returns the parsed version of the user input to boil down the intent
     def parsedData(self, userInput):
         """
             parsedData Method
@@ -320,13 +352,14 @@ class QuadraNLU:
         # if multiple "identifier" was found, it only considers one
         if identifier:
             identifier = random.sample(identifier, 1)
-            self.correctedWord.extend(identifier)
+            self.__correctedWords.extend(identifier)
         else:
             identifier = self.__isIncomplete(orig_userInput, self.__conjunctions, self.__auxiliary_verbs, self.__prepositions)
             question_type = None
-        result =  {"QT": question_type, "I": identifier}
+        result =  {"Question Type": question_type, "Identifier": identifier}
         return result
 
+    # method that returns the type of sentiment the user input provokes
     def sentimentAnalysis(self, userInput):
         """
             sentimentAnalysis Method
@@ -344,59 +377,57 @@ class QuadraNLU:
             Raises:
             TypeError: If 'userInput' is not a string
         """
-        result = {False: []}
+        description = ""
+        result = {description: []}
         if userInput.__contains__("!") and userInput.__contains__("?"):
-            result = {True: ["exclamation", "question"]}
+            description = "excitement/thrill/confusion"
+            result = {description: ["exclamation", "question"]}
         elif userInput.__contains__("!"):
-            result = {True: ["exclamation"]}
+            description = "excitement/thrill"
+            result = {description: ["exclamation"]}
         elif userInput.__contains__("?"):
-            result = {True: ["question"]}
+            description = "confusion/clarification"
+            result = {description: ["question"]}
         elif userInput.__contains__("...") or userInput.__contains__(".."):
-            result = {True: ["uncertainty"]}
+            description = "uncertainty/hesitation"
+            result = {description: ["ellipsis"]}
         if userInput.isupper():
             if True in result:
-                result[True].append("caps-lock")
+                result[description].append("caps-lock")
             else:
-                result = {True: ["caps-lock"]}
+                description = "aggression/frustration"
+                result = {description: ["caps-lock"]}
         return result
-    def __isIncomplete(self, userInput, conjunctions, auxiliary_verbs, prepositions):
-        """
-            __isIncomplete Method {private}
-            =======================
 
-            Description:
-            goes through one of the three lists from the parameter to detect if userInput is incomplete or not
+    # method that returns any possible places that the user mentioned in their original statement ~ improves specific contextualization
+    def printPlacesMentioned(self, userInput):
+        matches = [place for place in self.__specificPlaceList if
+                   re.search(rf'\b{re.escape(place.lower())}\b', userInput.lower())]
+        if len(matches) == 1:
+            return matches[0]
+        elif matches:
+            return ", ".join(matches)
+        else:
+            return ""
 
-            Parameters:
-            userInput: An input by the user that will be checked for possible incompleteness
-            conjunctions: a list of conjunction words to detect
-            auxiliary_verbs: a list of auxiliary verbs to detect
-            prepositions: a list of preposition words to detect
+    # method that returns any possible pop-culture that the user mentioned in their original statement ~ improves specific contextualization
+    def printPopCulturesMentioned(self, userInput):
+        matches = [place for place in self.__specificPopCultureList if
+                   re.search(rf'\b{re.escape(place.lower())}\b', userInput.lower())]
+        if len(matches) == 1:
+            return matches[0]
+        elif matches:
+            return ", ".join(matches)
+        else:
+            return ""
 
-            Returns:
-            result: A phrase that lets the user know, with a personalized message, that their input was incomplete
+    # method the returns the correctWords list for public access
+    def getCorrectedWords(self):
+        return self.__correctedWords
 
-            Raises:
-            TypeError: If 'userInput' is not a string
-        """
-        result = None
-        lastWord = userInput.split()[-1]
-
-        # list of possible personalized responses to incomplete queries that will be chosen at random
-        responses = [
-            f"Your sentence got cut off. You were saying: '{lastWord}', but what? Try again or type 'stop': ",
-            f"It looks like your question is incomplete. You ended with '{lastWord}', which suggests there's more to say. Could you clarify or type 'stop': ",
-            f"Hmm… your sentence stops at '{lastWord}', making it feel unfinished. What were you about to say. Try again or type 'stop': ",
-            f"You left me hanging! You said: '{lastWord}', but I think there’s more to it. Could you rephrase or type 'stop': ",
-            f"Your message seems incomplete—it ended with '{lastWord}', which usually means there's more to follow. Could you complete it or type 'stop': ",
-            f"Oops! It looks like your message trails off at '{lastWord}'. Can you finish your thought or type 'stop': ",
-            f"Uh-oh, sentence cliffhanger detected! 😆 You stopped at '{lastWord}'—but what? Don’t keep me in suspense! Try again or type 'stop': ",
-            f"It feels like you were about to say something important! You ended with '{lastWord}', but I think there’s more. Fill me in or type 'stop': ",
-        ]
-        if (any(lastWord.lower() == word.lower() for word in conjunctions)):
-            result = random.choice(responses)
-        elif (any(lastWord.lower() == word.lower() for word in auxiliary_verbs)):
-            result = random.choice(responses)
-        elif (any(lastWord.lower() == word.lower() for word in prepositions)):
-            result = random.choice(responses)
-        return result
+    # method that returns True if the userInput's first word is "if", "would", or "could", indicating hypothetical statement, else false
+    def is_hypothetical(self, userInput):
+        if not userInput:
+            return False
+        return (userInput.split()[0].lower() == "if" or userInput.split()[0].lower() == "would" or
+                userInput.split()[0].lower() == "could")
