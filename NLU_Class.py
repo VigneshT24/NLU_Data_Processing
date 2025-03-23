@@ -1,4 +1,3 @@
-# UPDATE TO ADD: Personalize isIncomplete result
 # NLU Engine Name: Quadra
 # This can be used in any program to naturally analyze human languages - ENGLISH ONLY
 import re
