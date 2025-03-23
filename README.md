@@ -1,6 +1,6 @@
 # Python NLU Data Processing
 
-# This project replicates a basic version of Natural Language Understanding (NLU) that takes user input, usually a question, commonly asked to a Google Assistant, Alexa, Siri, Cortana, etc., to understand what the user is asking and possibly perform an appropriate action. The purpose of this engine is to be used by other programs and systems as an INTENT RECOGNITION MODEL, narrowing down the query by the user so that it improves search/action results.
+# The purpose of this engine is to serve as an Intent Recognition Model for integration into various programs and systems. It refines and clarifies user queries, enabling more accurate and relevant search or action results. For instance, programs can incorporate this engine within a search bar to effectively parse and narrow down the user's intent, thereby enhancing the accuracy and relevance of the responses or actions generated
 
 # NLU Engine Name: Quadra Engine
 
