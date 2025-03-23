@@ -1,5 +1,6 @@
 # NLU Engine Name: Quadra
 # This can be used in any program to naturally analyze human languages - ENGLISH ONLY
+# INTENT RECOGNITION MODEL
 import re
 import random
 
