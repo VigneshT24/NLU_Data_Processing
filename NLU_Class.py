@@ -325,7 +325,7 @@ class QuadraNLU:
             question_type = None
         result =  {"QT": question_type, "I": identifier}
         return result
-
+        
     def sentimentAnalysis(self, saved_input):
         """
             sentimentAnalysis Method
@@ -358,6 +358,7 @@ class QuadraNLU:
             else:
                 result = {True: ["caps-lock"]}
         return result
+        
     def __isIncomplete(self, userInput, conjunctions, auxiliary_verbs, prepositions):
         """
             __isIncomplete Method {private}
