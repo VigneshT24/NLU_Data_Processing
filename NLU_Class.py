@@ -361,7 +361,7 @@ class QuadraNLU:
             =======================
 
             Description:
-            The most important method as it returns parsed and proper "Question Type" [QT] and "Identifier" [I] for other programs using this engine for NLU
+            The most important method as it returns parsed and proper "Question Type" [QT], "Identifier" [I], and "Category" [C] for other programs using this engine for NLU
 
             Parameters:
             userInput: An input from user that is used to parse and extract information from
