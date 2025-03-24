@@ -18,124 +18,204 @@ class QuadraNLU:
     # list of possible type of questions ~ truncated for flexibility [non-exhaustive]
     __possibleList = [
 
-    # direct-answer question
-    ["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor", "far", "rain", "snow", "windy", "thunderstorm"],
+        # direct-answer question
+        ["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor", "far", "rain", "snow", "windy", "thunderstorm"],
 
-    # health-related questions
-    ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"],
+        # health-related questions
+        ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"],
 
-    # productivity questions
-    ["calendar", "remind", "product", "task", "schedul", "event", "deadlin", "project", "checklist", "alert", "notif", "organ", "priorit", "goal", "plann", "timelin", "focus", "track", "habit", "workflow"],
+        # productivity questions
+        ["calendar", "remind", "product", "task", "schedul", "event", "deadlin", "project", "checklist", "alert", "notif", "organ", "priorit", "goal", "plann", "timelin", "focus", "track", "habit", "workflow"],
 
-    # entertainment questions
-    ["scor", "gam", "jok", "song", "challeng", "puzzl", "music", "lyric", "match", "adventur", "humor", "quiz", "fun", "comed", "story", "celebr", "sport", "trend"],
+        # entertainment questions
+        ["scor", "gam", "jok", "song", "challeng", "puzzl", "music", "lyric", "match", "adventur", "humor", "quiz", "fun", "comed", "story", "celebr", "sport", "trend"],
 
-    # mathematical questions
-    ["plu", "minus", "multipl", "divid", "formula", "concept", "ratio", "square", "root", "cube", "algebra", "geometr", "calculus", "integr", "deriv", "vector", "probabil", "statist", "measur", "equation", "matrix", "quantit"],
+        # mathematical questions
+        ["plu", "minus", "multipl", "divid", "formula", "concept", "ratio", "square", "root", "cube", "algebra", "geometr", "calculus", "integr", "deriv", "vector", "probabil", "statist", "measur", "equation", "matrix", "quantit"],
 
-    # knowledge-building question
-    ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background", "going on"],
+        # knowledge-building question
+        ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background", "going on"],
 
-    # advice-seeking questions
-    ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid", "therap"],
+        # advice-seeking questions
+        ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid", "therap"],
 
-    # economic questions
-    ["cost", "valu", "money", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom", "buy"]
+        # economic questions
+        ["cost", "valu", "money", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom", "buy"]
     ]
 
     # list of possible geographical cities/states/countries [mildly-exhaustive]
     __specificPlaceList = [
 
-    # United States - States
-    "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania", "Ohio", "Georgia", "North Carolina",
-    "Michigan", "New Jersey", "Virginia", "Washington", "Arizona", "Massachusetts", "Tennessee", "Indiana", "Missouri",
-    "Maryland", "Wisconsin", "Colorado", "Minnesota", "South Carolina", "Alabama", "Louisiana", "Kentucky",
-    "Oregon", "Oklahoma", "Connecticut", "Utah", "Iowa", "Nevada", "Arkansas", "Mississippi", "Kansas", "New Mexico",
-    "Nebraska", "West Virginia", "Idaho", "Hawaii", "New Hampshire", "Maine", "Montana", "Rhode Island", "Delaware",
-    "South Dakota", "North Dakota", "Alaska", "Vermont", "Wyoming",
+        # United States - States
+        "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania", "Ohio", "Georgia", "North Carolina",
+        "Michigan", "New Jersey", "Virginia", "Washington", "Arizona", "Massachusetts", "Tennessee", "Indiana",
+        "Missouri",
+        "Maryland", "Wisconsin", "Colorado", "Minnesota", "South Carolina", "Alabama", "Louisiana", "Kentucky",
+        "Oregon", "Oklahoma", "Connecticut", "Utah", "Iowa", "Nevada", "Arkansas", "Mississippi", "Kansas",
+        "New Mexico",
+        "Nebraska", "West Virginia", "Idaho", "Hawaii", "New Hampshire", "Maine", "Montana", "Rhode Island", "Delaware",
+        "South Dakota", "North Dakota", "Alaska", "Vermont", "Wyoming",
 
-    # United States - Cities
-    "Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "New York City", "Houston", "Seattle",
-    "Boston", "Atlanta", "Phoenix", "Philadelphia", "San Diego", "Denver", "Dallas", "Orlando", "Tampa", "Minneapolis",
-    "Detroit", "Portland", "St. Louis", "San Antonio", "Charlotte", "Pittsburgh", "Cleveland", "Kansas City",
-    "Indianapolis", "Nashville", "Salt Lake City", "Honolulu", "Albuquerque", "Buffalo", "Sacramento", "Birmingham",
+        # United States - Cities
+        "Los Angeles", "Chicago", "San Francisco", "Miami", "Austin", "Las Vegas", "New York City", "Houston",
+        "Seattle",
+        "Boston", "Atlanta", "Phoenix", "Philadelphia", "San Diego", "Denver", "Dallas", "Orlando", "Tampa",
+        "Minneapolis",
+        "Detroit", "Portland", "St. Louis", "San Antonio", "Charlotte", "Pittsburgh", "Cleveland", "Kansas City",
+        "Indianapolis", "Nashville", "Salt Lake City", "Honolulu", "Albuquerque", "Buffalo", "Sacramento", "Birmingham",
+        "Anchorage", "Omaha", "Des Moines", "Boise", "Little Rock", "Jacksonville", "Charleston", "Raleigh",
+        "Louisville",
+        "Riverside", "Lake Forest", "Irvine", "Anaheim", "Santa Ana", "Chula Vista", "Fresno", "Bakersfield",
+        "Stockton",
+        "Modesto", "Oxnard", "Fontana", "Moreno Valley", "Huntington Beach", "Glendale", "San Bernardino", "Irvine",
+        "Fremont", "San Jose", "Santa Clarita", "Oceanside", "Garden Grove", "Ontario", "Rancho Cucamonga",
+        "Santa Rosa",
+        "Chandler", "Scottsdale", "Gilbert", "Tempe", "Peoria", "Surprise", "Tucson", "Mesa",
 
-    # Global Cities (Major Capitals and Hubs)
-    "London", "Paris", "Berlin", "Madrid", "Rome", "Amsterdam", "Brussels", "Vienna", "Prague", "Moscow",
-    "Tokyo", "Seoul", "Beijing", "Shanghai", "Mumbai", "Delhi", "Bangalore", "Jakarta", "Manila", "Bangkok",
-    "Singapore", "Hong Kong", "Kuala Lumpur", "Dubai", "Riyadh", "Cairo", "Cape Town", "Johannesburg", "Lagos",
-    "Nairobi", "Addis Ababa", "Casablanca", "Buenos Aires", "São Paulo", "Rio de Janeiro", "Santiago",
-    "Lima", "Bogotá", "Caracas", "Mexico City", "Toronto", "Vancouver", "Sydney", "Melbourne", "Brisbane",
-    "Wellington", "Auckland", "Dublin", "Edinburgh", "Cardiff", "Belfast", "Helsinki", "Stockholm", "Oslo",
-    "Copenhagen", "Warsaw", "Budapest", "Belgrade", "Athens", "Istanbul", "Tel Aviv", "Jerusalem",
+        # Global Cities (Major Capitals and Hubs)
+        "London", "Paris", "Berlin", "Madrid", "Rome", "Amsterdam", "Brussels", "Vienna", "Prague", "Moscow",
+        "Tokyo", "Seoul", "Beijing", "Shanghai", "Mumbai", "Delhi", "Bangalore", "Jakarta", "Manila", "Bangkok",
+        "Singapore", "Hong Kong", "Kuala Lumpur", "Dubai", "Riyadh", "Cairo", "Cape Town", "Johannesburg", "Lagos",
+        "Nairobi", "Addis Ababa", "Casablanca", "Buenos Aires", "São Paulo", "Rio de Janeiro", "Santiago",
+        "Lima", "Bogotá", "Caracas", "Mexico City", "Toronto", "Vancouver", "Sydney", "Melbourne", "Brisbane",
+        "Wellington", "Auckland", "Dublin", "Edinburgh", "Cardiff", "Belfast", "Helsinki", "Stockholm", "Oslo",
+        "Copenhagen", "Warsaw", "Budapest", "Belgrade", "Athens", "Istanbul", "Tel Aviv", "Jerusalem", "Doha",
+        "Kuwait City", "Muscat", "Hanoi", "Yangon", "Tashkent", "Almaty", "Ulaanbaatar", "Dhaka",
 
-    # Countries
-    "United States", "Canada", "United Kingdom", "France", "Italy", "Germany", "Spain", "Mexico", "Brazil",
-    "Argentina", "South Africa", "Japan", "India", "China", "Russia", "Australia", "New Zealand", "South Korea",
-    "Vietnam", "Thailand", "Philippines", "Malaysia", "Indonesia", "Singapore", "Saudi Arabia", "United Arab Emirates",
-    "Egypt", "Morocco", "Kenya", "Nigeria", "Turkey", "Greece", "Portugal", "Sweden", "Norway", "Denmark",
-    "Netherlands", "Belgium", "Austria", "Switzerland", "Poland", "Czech Republic", "Hungary", "Romania",
-    "Bulgaria", "Serbia", "Croatia", "Slovenia", "Bosnia and Herzegovina", "Montenegro", "North Macedonia",
-    "Albania", "Ukraine", "Belarus", "Kazakhstan", "Uzbekistan", "Turkmenistan", "Kyrgyzstan", "Armenia", "Georgia",
-    "Azerbaijan", "Israel", "Jordan", "Iraq", "Iran", "Pakistan", "Afghanistan", "Bangladesh", "Nepal",
-    "Sri Lanka", "Bhutan", "Maldives", "Fiji", "Papua New Guinea", "Samoa", "Tonga", "Tuvalu",
+        # Countries
+        "United States", "Canada", "United Kingdom", "France", "Italy", "Germany", "Spain", "Mexico", "Brazil",
+        "Argentina", "South Africa", "Japan", "India", "China", "Russia", "Australia", "New Zealand", "South Korea",
+        "Vietnam", "Thailand", "Philippines", "Malaysia", "Indonesia", "Singapore", "Saudi Arabia",
+        "United Arab Emirates",
+        "Egypt", "Morocco", "Kenya", "Nigeria", "Turkey", "Greece", "Portugal", "Sweden", "Norway", "Denmark",
+        "Netherlands", "Belgium", "Austria", "Switzerland", "Poland", "Czech Republic", "Hungary", "Romania",
+        "Bulgaria", "Serbia", "Croatia", "Slovenia", "Bosnia and Herzegovina", "Montenegro", "North Macedonia",
+        "Albania", "Ukraine", "Belarus", "Kazakhstan", "Uzbekistan", "Turkmenistan", "Kyrgyzstan", "Armenia", "Georgia",
+        "Azerbaijan", "Israel", "Jordan", "Iraq", "Iran", "Pakistan", "Afghanistan", "Bangladesh", "Nepal",
+        "Sri Lanka", "Bhutan", "Maldives", "Fiji", "Papua New Guinea", "Samoa", "Tonga", "Tuvalu", "Mongolia",
 
-    # Regions
-    "North America", "South America", "Europe", "Asia", "Africa", "Oceania", "Caribbean", "Middle East", "Arctic",
-    "Antarctica", "Southeast Asia", "Central Asia", "Eastern Europe", "Western Europe", "Southern Africa",
-    "East Africa", "West Africa", "North Africa", "Central America", "Pacific Islands", "Scandinavia", "Balkan Peninsula",
-    "Iberian Peninsula", "Himalayas", "Sahara Desert", "Amazon Rainforest", "Great Plains", "Rocky Mountains",
-    "Andes Mountains", "Alps", "Pyrenees", "Mediterranean", "Atlantic Ocean", "Pacific Ocean", "Indian Ocean",
-    "Arctic Ocean", "Baltic Sea", "Caribbean Sea", "Gulf of Mexico", "Bering Strait", "Panama Canal", "Suez Canal"
+        # Regions
+        "North America", "South America", "Europe", "Asia", "Africa", "Oceania", "Caribbean", "Middle East", "Arctic",
+        "Antarctica", "Southeast Asia", "Central Asia", "Eastern Europe", "Western Europe", "Southern Africa",
+        "East Africa", "West Africa", "North Africa", "Central America", "Pacific Islands", "Scandinavia",
+        "Balkan Peninsula",
+        "Iberian Peninsula", "Himalayas", "Sahara Desert", "Amazon Rainforest", "Great Plains", "Rocky Mountains",
+        "Andes Mountains", "Alps", "Pyrenees", "Mediterranean", "Atlantic Ocean", "Pacific Ocean", "Indian Ocean",
+        "Arctic Ocean", "Baltic Sea", "Caribbean Sea", "Gulf of Mexico", "Bering Strait", "Panama Canal", "Suez Canal",
+        "Mount Everest", "Mount Kilimanjaro", "Grand Canyon", "Great Barrier Reef", "Serengeti",
+        "Yellowstone National Park",
+        "Yosemite National Park", "Victoria Falls", "Niagara Falls", "Amazon River", "Nile River", "Mississippi River",
+        "Danube River", "Volga River", "Ganges River", "Mekong River", "Lake Victoria", "Great Lakes"
     ]
 
     # list of possible pop-culture references [mildly-exhaustive]
     __specificPopCultureList = [
 
-    # Movies
-    "The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction",
-    "Back to the Future", "The Lion King", "Avatar", "Inception", "Frozen", "The Dark Knight", "Forrest Gump", "The Shawshank Redemption",
-    "The Lord of the Rings", "Spider-Man", "Iron Man", "Black Panther", "Top Gun", "Wonder Woman", "Captain America",
-    "Finding Nemo", "Toy Story", "Shrek", "Cinderella", "Beauty and the Beast", "Aladdin", "Pirates of the Caribbean",
-    "The Hunger Games", "The Twilight Saga", "The Fast and the Furious", "Transformers", "The Bourne Identity", "Rocky",
-    "Creed", "A Quiet Place", "The Social Network", "The Joker", "Interstellar", "Goodfellas", "La La Land", "Coco",
-    "Encanto", "Zootopia", "Minions", "Moana", "Despicable Me", "The Little Mermaid", "Dune", "Oppenheimer", "Barbie", "Mission Impossible",
+        # Movies (Classic & Modern)
+        "The Avengers", "Star Wars", "The Matrix", "Harry Potter", "Jurassic Park", "Titanic", "The Godfather", "Pulp Fiction",
+        "Back to the Future", "The Lion King", "Avatar", "Inception", "Frozen", "The Dark Knight", "Forrest Gump",
+        "The Shawshank Redemption", "The Lord of the Rings", "Spider-Man", "Iron Man", "Black Panther", "Top Gun",
+        "Wonder Woman", "Captain America", "Finding Nemo", "Toy Story", "Shrek", "Cinderella", "Beauty and the Beast",
+        "Aladdin", "Pirates of the Caribbean", "The Hunger Games", "The Twilight Saga", "The Fast and the Furious",
+        "Transformers", "The Bourne Identity", "Rocky", "Creed", "A Quiet Place", "The Social Network", "The Joker",
+        "Interstellar", "Goodfellas", "La La Land", "Coco", "Encanto", "Zootopia", "Minions", "Moana", "Despicable Me",
+        "The Little Mermaid", "Dune", "Oppenheimer", "Barbie", "Mission Impossible", "The Incredibles", "It", "Scream",
+        "The Conjuring", "Paranormal Activity", "The Exorcist", "Jaws", "A Nightmare on Elm Street", "Halloween",
+        "The Texas Chainsaw Massacre", "The Silence of the Lambs", "Get Out", "Us", "Nope", "The Batman", "Deadpool",
+        "Logan", "Doctor Strange", "Thor", "Guardians of the Galaxy", "Ant-Man", "Venom", "X-Men", "Justice League",
+        "Man of Steel", "The Flash", "Aquaman", "Shazam!", "The Suicide Squad", "John Wick", "Mad Max: Fury Road",
+        "Everything Everywhere All at Once", "The Grand Budapest Hotel", "Whiplash", "The Revenant", "Gladiator",
+        "Fight Club", "The Truman Show", "The Departed", "Django Unchained", "Kill Bill", "Reservoir Dogs",
+        "The Green Mile", "The Pianist", "Saving Private Ryan", "Full Metal Jacket", "Platoon", "Apocalypse Now",
+        "Casablanca", "Citizen Kane", "12 Angry Men", "2001: A Space Odyssey", "A Clockwork Orange", "Blade Runner",
+        "Scarface", "Taxi Driver", "The Big Lebowski", "American Psycho", "Requiem for a Dream", "Eternal Sunshine of the Spotless Mind",
+        "The Sixth Sense", "Se7en", "Memento", "Donnie Darko", "Pan’s Labyrinth", "Oldboy", "Spirited Away", "Your Name",
+        "Akira", "Princess Mononoke", "My Neighbor Totoro", "Ghost in the Shell", "The Iron Giant", "Coraline",
 
-    # Brands
-    "Apple", "Nike", "Tesla", "Coca-Cola", "McDonald’s", "Amazon", "Google", "Adidas", "Disney", "Microsoft", "Nvidia",
-    "Samsung", "Sony", "Intel", "Pepsi", "Starbucks", "Walmart", "Gucci", "Louis Vuitton", "Chanel", "Hermès", "Prada",
-    "Zara", "H&M", "Patagonia", "North Face", "Rolex", "Omega", "Lego", "Spotify", "Netflix", "YouTube", "Meta",
-    "TikTok", "Snapchat", "Bose", "PlayStation", "Xbox", "Nintendo", "Uber", "Lyft", "FedEx", "UPS", "Airbnb", "Balenciaga",
-    "Booking.com", "American Express", "Visa", "Mastercard", "Gucci", "Dior", "Cartier", "Burberry", "Versace", "Tiffany & Co.",
+        # TV Shows
+        "Friends", "Game of Thrones", "House of the Dragon", "Breaking Bad", "Better Call Saul", "The Sopranos",
+        "Mad Men", "Stranger Things", "The Office", "Parks and Recreation", "Brooklyn Nine-Nine", "Seinfeld",
+        "How I Met Your Mother", "Big Bang Theory", "The Mandalorian", "Andor", "The Book of Boba Fett", "Ahsoka",
+        "The Walking Dead", "Fear the Walking Dead", "Westworld", "The Crown", "Euphoria", "Wednesday", "Squid Game",
+        "The Witcher", "The Umbrella Academy", "The Boys", "Vikings", "The Last of Us", "American Horror Story",
+        "Fargo", "Supernatural", "Glee", "Suits", "Yellowstone", "Peaky Blinders", "True Detective", "Dexter",
+        "Lost", "Grey’s Anatomy", "Buffy the Vampire Slayer", "Arrested Development", "Futurama", "Family Guy",
+        "South Park", "BoJack Horseman", "Rick and Morty", "Gravity Falls", "Adventure Time", "Steven Universe",
+        "Invincible", "Arcane", "One Piece", "Black Mirror", "Doctor Who", "Sherlock", "Merlin",
+        "The Twilight Zone", "X-Files", "Hannibal", "Chernobyl", "Band of Brothers", "The Wire",
 
-    # TV Shows
-    "Friends", "Game of Thrones", "The Office", "Stranger Things", "Breaking Bad", "The Simpsons", "The Mandalorian",
-    "The Crown", "The Walking Dead", "Westworld", "How I Met Your Mother", "Seinfeld", "Parks and Recreation", "Brooklyn Nine-Nine",
-    "Big Bang Theory", "Schitt’s Creek", "Succession", "House of the Dragon", "Euphoria", "Wednesday", "Squid Game",
-    "The Witcher", "Better Call Saul", "Mad Men", "Lost", "Grey’s Anatomy", "Dexter", "Buffy the Vampire Slayer",
-    "The Sopranos", "True Detective", "The Boys", "Vikings", "The Umbrella Academy", "Arrested Development", "Fargo",
-    "American Horror Story", "Ozark", "Supernatural", "Glee", "Suits", "Yellowstone", "The Last of Us", "Peaky Blinders",
+        # Tech & Electronics
+        "Apple", "Samsung", "Google", "Microsoft", "Intel", "Nvidia", "AMD", "Sony", "LG", "Huawei", "Oppo", "OnePlus",
+        "Xiaomi", "Motorola", "Lenovo", "Asus", "Acer", "Dell", "HP", "Razer", "Logitech", "Corsair", "Alienware",
+        "MSI", "Western Digital", "Seagate", "Kingston", "Crucial", "HyperX", "Bose", "Beats", "JBL", "Sennheiser",
+        "Harman Kardon", "Bang & Olufsen", "GoPro", "DJI", "Garmin", "Tesla", "Rivian", "Lucid Motors", "SpaceX",
+        "Blue Origin", "Qualcomm", "Cisco", "IBM", "Oracle", "SAP", "Adobe", "Dropbox", "Slack", "Zoom", "Spotify",
+        "Netflix", "YouTube", "Meta", "TikTok", "Snapchat", "Twitter", "Reddit", "Discord", "Twitch", "Pinterest",
+        "PayPal", "Square", "Stripe", "Robinhood", "Coinbase", "OpenAI", "Salesforce", "Amazon Web Services",
+        "Google Cloud", "IBM Watson", "Cloudflare", "Red Hat", "Docker", "GitHub", "GitLab", "Unity", "Unreal Engine",
 
-    # Artists
-    "The Beatles", "Beyonce", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake",
-    "Lady Gaga", "Eminem", "Ed Sheeran", "Justin Bieber", "Adele", "Rihanna", "Billie Eilish", "The Rolling Stones",
-    "Queen", "Pink Floyd", "Led Zeppelin", "Coldplay", "Bruno Mars", "Kendrick Lamar", "Harry Styles", "Doja Cat",
-    "Lil Nas X", "Shawn Mendes", "Bad Bunny", "Karol G", "Shakira", "Jennifer Lopez", "Mariah Carey", "Celine Dion",
-    "Taylor Swift", "Frank Sinatra", "Whitney Houston", "Prince", "ABBA", "Bee Gees", "Fleetwood Mac", "John Legend",
-    "Post Malone", "The Weeknd", "Selena Gomez", "BTS", "Blackpink", "Twice", "EXO", "Stray Kids", "Gorillaz", "Imagine Dragons",
+        # Fashion & Luxury Brands
+        "Nike", "Adidas", "Puma", "Reebok", "Under Armour", "New Balance", "Champion", "Fila", "Asics", "Converse",
+        "Vans", "Timberland", "The North Face", "Columbia", "Patagonia", "Arc'teryx", "Helly Hansen", "Salomon",
+        "Canada Goose", "Gucci", "Louis Vuitton", "Chanel", "Dior", "Hermes", "Prada", "Versace", "Burberry",
+        "Balenciaga", "Givenchy", "Valentino", "Dolce & Gabbana", "Fendi", "Yves Saint Laurent", "Tiffany & Co.",
+        "Cartier", "Rolex", "Omega", "Tag Heuer", "Patek Philippe", "Hublot", "Breguet", "Montblanc", "Ermenegildo Zegna",
+        "Tom Ford", "Hugo Boss", "Ralph Lauren", "Calvin Klein", "Lacoste", "Armani", "Tommy Hilfiger", "Michael Kors",
+        "Coach", "Kate Spade", "Marc Jacobs", "Chloe", "Miu Miu", "Celine", "Salvatore Ferragamo", "Bottega Veneta",
 
-    # Video Games
-    "Super Mario Bros.", "Minecraft", "Fortnite", "The Legend of Zelda", "Call of Duty", "Grand Theft Auto", "Pokémon",
-    "League of Legends", "FIFA", "The Witcher", "Overwatch", "World of Warcraft", "Roblox", "Valorant", "Apex Legends",
-    "Counter-Strike", "Elden Ring", "Dark Souls", "Halo", "Assassin's Creed", "God of War", "Red Dead Redemption",
-    "The Sims", "Animal Crossing", "Among Us", "Tetris", "Pac-Man", "Donkey Kong", "Fall Guys", "Candy Crush", "Diablo",
-    "Horizon Zero Dawn", "Cyberpunk 2077", "Battlefield", "Street Fighter", "Tekken", "PUBG", "Clash of Clans", "Clash Royale",
+        # Food & Beverage
+        "McDonald's", "Burger King", "Wendy's", "Taco Bell", "KFC", "Popeyes", "Chick-fil-A", "Subway", "Pizza Hut",
+        "Domino's", "Papa John's", "Little Caesars", "Starbucks", "Dunkin'", "Krispy Kreme", "Cinnabon", "Chipotle",
+        "Panera Bread", "Five Guys", "In N Out", "Shake Shack", "Carl’s Jr.", "Arby's", "Jack in the Box", "Panda Express",
+        "Wingstop", "Jersey Mike’s", "Jimmy John's", "Pepsi", "Coca Cola", "Dr Pepper", "Red Bull", "Monster Energy",
+        "Gatorade", "Nestle", "Hershey's", "Mars", "Snickers", "M&M's", "Skittles", "Kit Kat", "Twix", "Oreo",
+        "Doritos", "Lay’s", "Pringles", "Ruffles", "Frito-Lay", "Tostitos", "Ben & Jerry's", "Haagen Dazs", "Magnum",
 
-    # Automotive Brands
-    "Rolls-Royce", "Ferrari", "Lamborghini", "Porsche", "Maserati", "Bentley", "Aston Martin", "Bugatti", "McLaren",
-    "Mercedes-Benz", "Lexus", "BMW", "Audi", "Toyota", "Honda", "Ford", "Chevrolet", "Jeep", "Hyundai", "Kia", "Mazda",
-    "Subaru", "Volkswagen", "Jaguar", "Land Rover", "Tesla", "Rivian", "Lucid Motors", "Volvo", "Peugeot", "Renault",
-    "Fiat", "Alfa Romeo", "Citroën", "Dodge", "Chrysler", "Cadillac", "Acura", "Infiniti", "GMC", "Nissan", "Suzuki"
+        # Retail & E-commerce
+        "Amazon", "Walmart", "Target", "Costco", "Best Buy", "Home Depot", "Lowe’s", "IKEA", "Wayfair", "Macy's",
+        "Nordstrom", "Bloomingdale’s", "Saks Fifth Avenue", "Neiman Marcus", "Burlington", "Ross", "TJ Maxx",
+        "Marshalls", "Dollar Tree", "Dollar General", "CVS", "Walgreens", "Kroger", "Publix", "Whole Foods", "Trader Joe’s",
+        "Aldi", "7-Eleven", "Costco", "Sam’s Club", "eBay", "Etsy", "Zara", "H&M", "Uniqlo", "Shein", "ASOS", "Boohoo",
+
+        # Finance & Banking
+        "Visa", "Mastercard", "American Express", "PayPal", "Venmo", "Cash App", "Square", "Stripe", "Bank of America",
+        "Chase", "Wells Fargo", "Citibank", "Goldman Sachs", "Morgan Stanley", "JP Morgan", "HSBC", "Barclays", "UBS",
+        "Credit Suisse", "Deutsche Bank", "BNP Paribas", "Santander", "Ally Bank", "SoFi", "Robinhood", "Fidelity",
+        "Vanguard", "Charles Schwab", "E-Trade", "TD Ameritrade", "Coinbase", "Binance", "Kraken", "FTX",
+
+        # Automotive
+        "Tesla", "Toyota", "Honda", "Ford", "Chevrolet", "Dodge", "Jeep", "Ram", "Subaru", "Mazda", "Nissan", "Hyundai",
+        "Kia", "Volkswagen", "Audi", "BMW", "Mercedes-Benz", "Porsche", "Jaguar", "Land Rover", "Lexus", "Volvo",
+        "Ferrari", "Lamborghini", "McLaren", "Bugatti", "Rolls-Royce", "Bentley", "Aston Martin", "Maserati",
+        "Rivian", "Lucid Motors", "Polestar", "Genesis", "Chrysler", "Fiat", "Alfa Romeo", "GMC", "Suzuki"
+    
+        # Entertainment & Media
+        "Disney", "Warner Bros.", "Universal", "Paramount", "Sony Pictures", "20th Century Studios", "Netflix",
+        "HBO", "Hulu", "Amazon Prime Video", "Apple TV", "Peacock", "Crunchyroll", "Funimation", "Discovery",
+        "National Geographic", "BBC", "CNN", "Fox News", "MTV", "VH1", "Nickelodeon", "Cartoon Network", "Disney Channel",
+        "ESPN", "NBA", "NFL", "MLB", "NHL", "WWE", "UFC", "Formula 1", "NASCAR",
+
+        # Airlines & Travel
+        "Delta", "American Airlines", "United Airlines", "Southwest", "JetBlue", "Alaska Airlines", "Air Canada",
+        "Lufthansa", "British Airways", "Qatar Airways", "Emirates", "Singapore Airlines", "Japan Airlines",
+        "Cathay Pacific", "Turkish Airlines", "Air France", "KLM", "Etihad Airways", "Virgin Atlantic", "Ryanair",
+        "EasyJet", "Aeromexico", "Qantas", "LATAM", "Norwegian Air", "WestJet", "Hawaiian Airlines",
+
+        # Artists
+        "The Beatles", "Beyonce", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake",
+        "Lady Gaga", "Eminem", "Ed Sheeran", "Justin Bieber", "Adele", "Rihanna", "Billie Eilish", "The Rolling Stones",
+        "Queen", "Pink Floyd", "Led Zeppelin", "Coldplay", "Bruno Mars", "Kendrick Lamar", "Harry Styles", "Doja Cat",
+        "Lil Nas X", "Shawn Mendes", "Bad Bunny", "Karol G", "Shakira", "Jennifer Lopez", "Mariah Carey", "Celine Dion",
+        "Taylor Swift", "Frank Sinatra", "Whitney Houston", "Prince", "ABBA", "Bee Gees", "Fleetwood Mac", "John Legend",
+        "Post Malone", "The Weeknd", "Selena Gomez", "BTS", "Blackpink", "Twice", "EXO", "Stray Kids", "Gorillaz", "Imagine Dragons",
+        "Yo Yo Honey Singh", "Anirudh Ravichandran", "Arjith Singh",
+
+        # Video Games
+        "Super Mario Bros.", "Minecraft", "Fortnite", "The Legend of Zelda", "Call of Duty", "Grand Theft Auto", "Pokémon",
+        "League of Legends", "FIFA", "The Witcher", "Overwatch", "World of Warcraft", "Roblox", "Valorant", "Apex Legends",
+        "Counter-Strike", "Elden Ring", "Dark Souls", "Halo", "Assassin's Creed", "God of War", "Red Dead Redemption",
+        "The Sims", "Animal Crossing", "Among Us", "Tetris", "Pac-Man", "Donkey Kong", "Fall Guys", "Candy Crush", "Diablo",
+        "Horizon Zero Dawn", "Cyberpunk 2077", "Battlefield", "Street Fighter", "Tekken", "PUBG", "Clash of Clans", "Clash Royale"
     ]
 
     # following 3 lists are used to detect specific type of incomplete sentences
@@ -163,37 +243,37 @@ class QuadraNLU:
     # helper list that is used for REDUCING autocorrect misinterpretations
     # already implemented, no need to worry
     __autocorrectExceptions = [
-
-    # Common question words
-    "what", "who", "why", "where", "when", "how",
-
-    # Modal verbs and auxiliaries
-    "will", "can", "shall", "should", "could", "would", "may", "might", "must", "do", "does", "did", "is", "are",
-    "was", "were", "be",
-
-    # Common commands and suggestions
-    "play", "lets", "let", "go", "stop", "run", "walk", "come", "get", "give", "tell", "show", "find", "make",
-    "take",
-
-    # Logical words
-    "if", "and", "or", "but", "nor", "yet", "so", "because", "since", "as", "while", "though", "although", "unless",
-    "until",
-
-    # Frequently used pronouns and identifiers
-    "this", "that", "these", "those", "it", "they", "them", "we", "us", "he", "she", "him", "her", "you", "I", "me",
-
-    # Short confirmation or negation words
-    "yes", "no", "not", "ok", "okay", "yeah", "nah",
-
-    # Time-related words
-    "today", "tomorrow", "yesterday", "now", "then", "soon", "later", "always", "never", "sometimes", "often",
-
-    # Prepositions and conjunctions
-    "in", "on", "at", "with", "by", "for", "to", "of", "off", "about", "above", "below", "before", "after", "during",
-
-    # Miscellaneous
-    "why", "try", "ask", "fix", "put", "set", "read", "write", "say", "speak", "think", "feel", "know", "see", "hear",
-    "want"
+    
+        # Common question words
+        "what", "who", "why", "where", "when", "how",
+    
+        # Modal verbs and auxiliaries
+        "will", "can", "shall", "should", "could", "would", "may", "might", "must", "do", "does", "did", "is", "are",
+        "was", "were", "be",
+    
+        # Common commands and suggestions
+        "play", "lets", "let", "go", "stop", "run", "walk", "come", "get", "give", "tell", "show", "find", "make",
+        "take",
+    
+        # Logical words
+        "if", "and", "or", "but", "nor", "yet", "so", "because", "since", "as", "while", "though", "although", "unless",
+        "until",
+    
+        # Frequently used pronouns and identifiers
+        "this", "that", "these", "those", "it", "they", "them", "we", "us", "he", "she", "him", "her", "you", "I", "me",
+    
+        # Short confirmation or negation words
+        "yes", "no", "not", "ok", "okay", "yeah", "nah",
+    
+        # Time-related words
+        "today", "tomorrow", "yesterday", "now", "then", "soon", "later", "always", "never", "sometimes", "often",
+    
+        # Prepositions and conjunctions
+        "in", "on", "at", "with", "by", "for", "to", "of", "off", "about", "above", "below", "before", "after", "during",
+    
+        # Miscellaneous
+        "why", "try", "ask", "fix", "put", "set", "read", "write", "say", "speak", "think", "feel", "know", "see", "hear",
+        "want"
     ]
 
     # words that are autocorrected
