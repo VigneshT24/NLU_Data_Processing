@@ -243,34 +243,34 @@ class QuadraNLU:
     # helper list that is used for REDUCING autocorrect misinterpretations
     # already implemented, no need to worry
     __autocorrectExceptions = [
-    
+
         # Common question words
         "what", "who", "why", "where", "when", "how",
-    
+
         # Modal verbs and auxiliaries
         "will", "can", "shall", "should", "could", "would", "may", "might", "must", "do", "does", "did", "is", "are",
         "was", "were", "be",
-    
+
         # Common commands and suggestions
         "play", "lets", "let", "go", "stop", "run", "walk", "come", "get", "give", "tell", "show", "find", "make",
         "take",
-    
+
         # Logical words
         "if", "and", "or", "but", "nor", "yet", "so", "because", "since", "as", "while", "though", "although", "unless",
         "until",
-    
+
         # Frequently used pronouns and identifiers
         "this", "that", "these", "those", "it", "they", "them", "we", "us", "he", "she", "him", "her", "you", "I", "me",
-    
+
         # Short confirmation or negation words
         "yes", "no", "not", "ok", "okay", "yeah", "nah",
-    
+
         # Time-related words
         "today", "tomorrow", "yesterday", "now", "then", "soon", "later", "always", "never", "sometimes", "often",
-    
+
         # Prepositions and conjunctions
         "in", "on", "at", "with", "by", "for", "to", "of", "off", "about", "above", "below", "before", "after", "during",
-    
+
         # Miscellaneous
         "why", "try", "ask", "fix", "put", "set", "read", "write", "say", "speak", "think", "feel", "know", "see", "hear",
         "want"
@@ -412,28 +412,39 @@ class QuadraNLU:
             finds out which category the identifier belongs to by taking advantage of the structural manner of possibleList
 
             Returns:
-            string: gives a brief description of the type of category identifier belongs to
+            list of string: gives a brief description of the type of categories identifier belongs to
 
             Raises:
             TypeError: If member variable is not a proper data type
         """
-        rowCategory = -1
-        if (self.__identifier != None):
+        rowCategory = []
+        result = []
+        if self.__identifier is not None:
             for row in range(len(self.__possibleList)):
                 for column in range(len(self.__possibleList[row])):
                     for a in self.__identifier:
                         if a.strip().lower() == self.__possibleList[row][column].strip().lower():
-                            rowCategory = row
-                            break
-        if (rowCategory == 0): return "Direct-Answer Question"
-        if (rowCategory == 1): return "Health-Related Question"
-        if (rowCategory == 2): return "Productivity Question"
-        if (rowCategory == 3): return "Entertainment Question"
-        if (rowCategory == 4): return "Mathematical Question"
-        if (rowCategory == 5): return "Knowledge-Building Question"
-        if (rowCategory == 6): return "Advice-Seeking Question"
-        if (rowCategory == 7): return "Economic-Based Question"
-        return "No Category"
+                            rowCategory.append(row)
+
+        # Iterate through rowCategory and append all possible matches
+        for r in rowCategory:
+            if r == 0:
+                result.append("Direct-Answer Question")
+            elif r == 1:
+                result.append("Health-Related Question")
+            elif r == 2:
+                result.append("Productivity Question")
+            elif r == 3:
+                result.append("Entertainment Question")
+            elif r == 4:
+                result.append("Mathematical Question")
+            elif r == 5:
+                result.append("Knowledge-Building Question")
+            elif r == 6:
+                result.append("Advice-Seeking Question")
+            elif r == 7:
+                result.append("Economic-Based Question")
+        return [] if not result else result
 
     def parsedData(self, userInput):
         """
@@ -441,7 +452,7 @@ class QuadraNLU:
             =======================
 
             Description:
-            The most important method as it returns parsed and proper "Question Type" [QT], "Identifier" [I], and "Category" [C] for other programs using this engine for NLU
+            The most important method as it returns parsed and proper "Question Type" [QT], "Identifier" [I], and "Categories" [C] for other programs using this engine for NLU
 
             Parameters:
             userInput: An input from user that is used to parse and extract information from
@@ -477,7 +488,7 @@ class QuadraNLU:
         else:
             self.__identifier = self.__isIncomplete(orig_userInput, self.__conjunctions, self.__auxiliary_verbs, self.__prepositions)
             self.__question_type = None
-        result =  {"Question Type": self.__question_type, "Identifier": self.__identifier, "Category":self.__getInputCategory()}
+        result =  {"Question Type": self.__question_type, "Identifier": self.__identifier, "Categories": self.__getInputCategory()}
         return result
 
     def sentimentAnalysis(self, userInput):
