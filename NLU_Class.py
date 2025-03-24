@@ -3,6 +3,7 @@
 # INTENT RECOGNITION MODEL
 import re
 import random
+import string
 
 class QuadraNLU:
 
@@ -393,7 +394,8 @@ class QuadraNLU:
             TypeError: If 'userInput' is not a string
         """
         result = None
-        lastWord = userInput.strip().split()[-1]
+        userInput = userInput.translate(str.maketrans("", "", string.punctuation)).strip()
+        lastWord = userInput.split()[-1].lower()
 
         if (any(lastWord.lower() == word.lower() for word in conjunctions)):
             result = "Incomplete. Ends with a conjunction."
