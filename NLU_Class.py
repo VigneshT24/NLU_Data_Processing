@@ -111,7 +111,7 @@ class QuadraNLU:
     "American Horror Story", "Ozark", "Supernatural", "Glee", "Suits", "Yellowstone", "The Last of Us", "Peaky Blinders",
 
     # Artists
-    "The Beatles", "Beyoncé", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake",
+    "The Beatles", "Beyonce", "Kanye West", "Taylor Swift", "Elvis Presley", "Michael Jackson", "Ariana Grande", "Drake",
     "Lady Gaga", "Eminem", "Ed Sheeran", "Justin Bieber", "Adele", "Rihanna", "Billie Eilish", "The Rolling Stones",
     "Queen", "Pink Floyd", "Led Zeppelin", "Coldplay", "Bruno Mars", "Kendrick Lamar", "Harry Styles", "Doja Cat",
     "Lil Nas X", "Shawn Mendes", "Bad Bunny", "Karol G", "Shakira", "Jennifer Lopez", "Mariah Carey", "Celine Dion",
@@ -332,12 +332,13 @@ class QuadraNLU:
             TypeError: If member variable is not a proper data type
         """
         rowCategory = -1
-        for row in range(len(self.__possibleList)):
-            for column in range(len(self.__possibleList[row])):
-                for a in self.__identifier:
-                    if a.strip().lower() == self.__possibleList[row][column].strip().lower():
-                        rowCategory = row
-                        break
+        if (self.__identifier != None):
+            for row in range(len(self.__possibleList)):
+                for column in range(len(self.__possibleList[row])):
+                    for a in self.__identifier:
+                        if a.strip().lower() == self.__possibleList[row][column].strip().lower():
+                            rowCategory = row
+                            break
         if (rowCategory == 0): return "Direct-Answer Question"
         if (rowCategory == 1): return "Health-Related Question"
         if (rowCategory == 2): return "Productivity Question"
@@ -366,7 +367,7 @@ class QuadraNLU:
             TypeError: If 'userInput' is not a string.
         """
         orig_userInput = userInput
-        userInput = self.__stemWord(userInput)
+        userInput = self.__stemWord(userInput).lower()
         self.__question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could|i)", userInput))
         self.__identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
                       r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
