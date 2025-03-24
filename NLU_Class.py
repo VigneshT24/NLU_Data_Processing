@@ -6,6 +6,12 @@ import random
 
 class QuadraNLU:
 
+    # constructor that resets some member variable for fresh start
+    def __init__(self):
+        self.__correctedWords = []
+        self.__identifier = ""
+        self.__question_type = ""
+
     # to utilize these datasets: make QuadraNLU object and then call any or all of these data structures in appropriate places (e.g. to check if user_input contains any of the elements from these datasets)
     # purpose of these lists are for the computer to recognize words or patterns from user_input to better decipher queries
 
@@ -13,7 +19,7 @@ class QuadraNLU:
     __possibleList = [
 
     # direct-answer question
-    ["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor"],
+    ["capital", "distanc", "weather", "movi", "forecast", "cit", "length", "climat", "humidit", "director", "actor", "far", "rain", "snow", "windy", "thunderstorm"],
 
     # health-related questions
     ["exercis", "diet", "cook", "workout", "routin", "gym", "activit", "nutri", "wellness", "recipi", "fitnes", "yoga", "meditat", "stretch", "cardio", "strength", "vitamin", "calori", "symptom"],
@@ -25,7 +31,7 @@ class QuadraNLU:
     ["scor", "gam", "jok", "song", "challeng", "puzzl", "music", "lyric", "match", "adventur", "humor", "quiz", "fun", "comed", "story", "celebr", "sport", "trend"],
 
     # mathematical questions
-    ["plu", "minus", "multipl", "divid", "formula", "concept", "ratio", "algebra", "geometr", "calculus", "integrat", "deriv", "vector", "probabil", "statist", "measur", "equation", "matrix", "quantit"],
+    ["plu", "minus", "multipl", "divid", "formula", "concept", "ratio", "square", "root", "cube", "algebra", "geometr", "calculus", "integr", "deriv", "vector", "probabil", "statist", "measur", "equation", "matrix", "quantit"],
 
     # knowledge-building question
     ["pric", "mean", "fact", "happen", "latest", "explain", "differenc", "orig", "reason", "impact", "histor", "overview", "background", "going on"],
@@ -34,7 +40,7 @@ class QuadraNLU:
     ["best", "advic", "help", "tip", "plan", "stuck", "assist", "recommend", "suggest", "guid", "strategy", "solv", "improv", "overcom", "choic", "option", "suicid", "therap"],
 
     # economic questions
-    ["cost", "valu", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom", "buy"]
+    ["cost", "valu", "money", "budget", "cheap", "expens", "discount", "sale", "offer", "stock", "inventor", "demand", "suppl", "quot", "deal", "order", "purchas", "rent", "bill", "econom", "buy"]
     ]
 
     # list of possible geographical cities/states/countries [mildly-exhaustive]
@@ -238,14 +244,14 @@ class QuadraNLU:
             Raises:
             TypeError: If 'userInput' is not a string
         """
-        predefined_exclusions = ["is", "going on"]
+        predefined_exclusions = ["is", "going on", "ate"]
         ignored_words = predefined_exclusions + self.__specificPlaceList + self.__specificPopCultureList
         ignored_pattern = '|'.join(map(re.escape, ignored_words))
 
         regex = rf'\b(?!(?:{ignored_pattern})\b)' \
         r'(e|es|ing|ed|s|se|ication|ization|isation|ized|ised|ied|ous|y|' \
         r'ies|tion|ent|ents|er|ers|ic|ation|ating|ize|ian|ate|ative|atives|' \
-        r'ity|ics|in|inate|ance|ive|al|ist|ists|ivity)\b'
+        r'ity|ics|in|inate|ance|ive|al|ist|ists|ivity|ate|al)\b'
 
         return re.sub(regex, '', userInput, flags=re.IGNORECASE)
 
@@ -307,7 +313,7 @@ class QuadraNLU:
             TypeError: If 'userInput' is not a string
         """
         result = None
-        lastWord = userInput.split()[-1]
+        lastWord = userInput.strip().split()[-1]
 
         if (any(lastWord.lower() == word.lower() for word in conjunctions)):
             result = "Incomplete. Ends with a conjunction."
@@ -371,10 +377,10 @@ class QuadraNLU:
         self.__question_type = self.__removeDuplicate(re.findall(r"(what|who|why|where|when|how|will|can|play|lets|let|should|is|tell|give|if|are|would|could|i)", userInput))
         self.__identifier = self.__removeDuplicate(re.findall(r"(capital|best|cit|length|climat|humidit|director|actor|task|schedul|event|deadlin|project|checklist|alert|notif|organ|advic|stuck|help|tip|distanc|plan|weather|forecast|latest"
                       r"|happen|movi|exercis|song|diet|workout|explain|differenc|routin|gym|activit|nutri|wellness|recipi|fitnes|calendar|remind|cook|scor|pric|mean|plu|ratio|minus|multipl|divid|"
-                      r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|"
+                      r"jok|gam|fact|formula|concept|algebra|geometr|challeng|puzzl|music|lyric|match|adventur|humor|yoga|meditat|stretch|cardio|square|root|cube|"
                       r"strength|vitamin|calori|priorit|goal|plann|timelin|focus|track|habit|workflow|quiz|fun|comedi|story|celebr|sport|trend|"
-                      r"calculus|integrat|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
-                      r"cost|valu|budget|cheap|expens|discount|sale|offer|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap|product)", userInput))
+                      r"calculus|integr|deriv|vector|probabil|statist|measur|equation|symptom|matrix|quantit|orig|reason|impact|histor|overview|background|assist|recommend|suggest|guid|strategy|solv|improv|overcom|choic|option"
+                      r"cost|valu|budget|cheap|expens|discount|sale|offer|money|stock|inventor|demand|suppl|quot|deal|order|purchas|rent|bill|suicid|going on|econom|buy|therap|product|far|rain|snow|windy|thunderstorm)", userInput))
 
         # assigns "result" dictionary its appropriate question_type and identifier
         # only execute this statement if userInput is not incomplete
@@ -463,5 +469,7 @@ class QuadraNLU:
     def is_hypothetical(self, userInput):
         if not userInput:
             return False
+        if len(userInput.split()) >= 2:
+            return userInput.split()[0] == "what" and userInput.split()[1] == "if"
         return (userInput.split()[0].lower() == "if" or userInput.split()[0].lower() == "would" or
                 userInput.split()[0].lower() == "could")
